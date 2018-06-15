@@ -1,0 +1,81 @@
+﻿@model VendorManagementSystem.Models.VendorModel
+
+@{
+    ViewBag.Title = "HomePage";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+<link href="http://ajax.googleapis.com/ajax/libs/jqueryui/1.8/themes/cupertino/jquery-ui.css" type="text/css" rel="Stylesheet" />
+<script src="http://ajax.googleapis.com/ajax/libs/jquery/1.4/jquery.min.js" type="text/javascript"></script>
+<script src="http://ajax.googleapis.com/ajax/libs/jqueryui/1.8/jquery-ui.min.js" type="text/javascript"></script>
+<html>
+
+    <head>
+
+        <style>
+            body{
+               
+            }
+            #welcome{
+                margin-left:230px;
+                margin-top:30px;
+                margin-right:230px;
+                background-color:darkgrey;
+            }
+            #message{
+                 margin-left:230px;
+                margin-top:30px;
+                margin-right:230px;
+            }
+            #note{
+                margin-left:230px;
+                margin-top:30px;
+                margin-right:230px;
+                background-color:lightgray;
+            }
+            
+        </style>
+
+    </head>
+    
+    <body>
+        <ol class="breadcrumb">
+            <li class="active">VMSHome</li>
+        </ol>
+
+        <div id="welcome">
+            <h2><p align="center">We Welcomes you! On to be part of XYZ Company </p></h2> 
+        </div>
+
+        <div>
+            <img src="~/images/defImage.jpg" style="width:150px;height:150px; margin-left:480px; margin-top:23px;" />
+        </div>
+
+        <div id="message">
+            <p align="center">
+                Welcome to the XYZ Vendor Management System. The Company invites you to
+                login and register you business, lrtting us know who are you, what you sell
+                and how to contact you. Then, as the company has the need to purchase the
+                goods and services you sell, using this System, Company will notify you
+                and other similarly registered Vendors regarding the availability of the
+                Company's solicitation. You can login and update your registration at any time.<br /><br />
+                Again, welcome to the XYZ Company's Vendor Management System and thank you
+                for your interest in doing business with the XYZ Company.<br />
+            </p>
+        </div>
+
+        <div id="note">
+            <b>Note:</b><br />
+            Are you new vendor to us Then, please <a href="http://localhost:50303/RegisteLogin/vendor">Register.</a> <br />
+            Already registered with us Then, <a href="http://localhost:50303/RegisteLogin/VendorLogin">Login.</a> please. <br />
+        </div>
+    </body>
+
+</html>
+
+<script>
+//disabling back button
+history.pushState(null, null, location.href);
+    window.onpopstate = function () {
+        history.go(1);
+    };
+</script>

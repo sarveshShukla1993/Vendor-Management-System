@@ -1,0 +1,190 @@
+﻿@model VendorManagementSystem.ProjectViewModel.IndivisualvendorDetailModel
+
+@{
+    ViewBag.Title = "IndivisualvendorDetail";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<html>
+<head>
+    <style>
+        table {
+            font-family: arial, sans-serif;
+            border-collapse: collapse;
+            width: 100%;
+        }
+
+        h3{
+            color:maroon;
+        }
+
+        h2 {
+            margin-left: 460px;
+            color: maroon;
+        }
+
+        td, th {
+            border: 1px solid #dddddd;
+            text-align: left;
+            padding: 8px;
+        }
+
+        tr:nth-child(even) {
+            background-color: #dddddd;
+        }
+    </style>
+</head>
+<body>
+
+    <ol class="breadcrumb">
+        @if (ViewBag.url == "http://localhost:50303/SuperAdmin/LoginLogoutDetails")
+        {
+            <li>@Html.ActionLink("AdminHome", "AdminPortal", "SuperAdmin", routeValues: null, htmlAttributes: new { id = "registerLink" })</li>
+            <li>@Html.ActionLink("LoginLogoutDetails", "LoginLogoutDetails", "SuperAdmin", routeValues: null, htmlAttributes: new { id = "registerLink" })</li>
+            <li class="active">IndivisualvendorDetail</li>
+        }
+        else
+        {
+            <li>@Html.ActionLink("AdminHome", "AdminPortal", "SuperAdmin", routeValues: null, htmlAttributes: new { id = "registerLink" })</li>
+            <li>@Html.ActionLink("VendorList", "VendorList", "SuperAdmin", routeValues: null, htmlAttributes: new { id = "registerLink" })</li>
+            <li class="active">IndivisualvendorDetail</li>
+        }
+    </ol>
+
+    <h2>Vendor Details</h2>
+        <table>
+            <tr>
+                <th>
+                    <h3>
+                        Vendor Contact Information:
+                    </h3>
+                </th>
+            </tr>
+            <tr>
+                <th>@Html.DisplayNameFor(model => model.VName)</th>
+                <td>@Html.DisplayFor(model => model.VName)</td>
+                <th>@Html.DisplayNameFor(model => model.VEmail)</th>
+                <td>@Html.DisplayFor(model => model.VEmail)</td>
+            </tr>
+
+            <tr>
+                <th>@Html.DisplayNameFor(model => model.VContact)</th>
+                <td>@Html.DisplayFor(model => model.VContact)</td>
+                <th>@Html.DisplayNameFor(model => model.SellCategory)</th>
+                <td>@Html.DisplayFor(model => model.SellCategory)</td>
+            </tr>
+
+            <tr>
+                <th>@Html.DisplayNameFor(model => model.CompanyName)</th>
+                <td>@Html.DisplayFor(model => model.CompanyName)</td>
+                <th>@Html.DisplayNameFor(model => model.RegisteredBusineesAddr)</th>
+                <td>@Html.DisplayFor(model => model.RegisteredBusineesAddr)</td>
+            </tr>
+            <tr>
+                <th>
+                    <h3>
+                        Vendor Business Information:
+                    </h3>
+                </th>
+            </tr>
+
+            <tr>
+                <th>@Html.DisplayNameFor(model => model.NoProducts)</th>
+                <td>@Html.DisplayFor(model => model.NoProducts)</td>
+                <th>@Html.DisplayNameFor(model => model.MiPrice)</th>
+                <td>@Html.DisplayFor(model => model.MiPrice)</td>
+            </tr>
+
+            <tr>
+                <th>@Html.DisplayNameFor(model => model.MaPrice)</th>
+                <td>@Html.DisplayFor(model => model.MaPrice)</td>
+                <th>@Html.DisplayNameFor(model => model.SellingOnline)</th>
+                <td>@Html.DisplayFor(model => model.SellingOnline)</td>
+            </tr>
+
+            <tr>
+                <th>@Html.DisplayNameFor(model => model.BusinessMode)</th>
+                <td>@Html.DisplayFor(model => model.BusinessMode)</td>
+                <th>@Html.DisplayNameFor(model => model.OperateFrom)</th>
+                <td>@Html.DisplayFor(model => model.OperateFrom)</td>
+            </tr>
+
+            <tr>
+                <th>@Html.DisplayNameFor(model => model.HandledBy)</th>
+                <td>@Html.DisplayFor(model => model.HandledBy)</td>
+                <th>@Html.DisplayNameFor(model => model.Gen)</th>
+                <td>@Html.DisplayFor(model => model.Gen)</td>
+            </tr>
+            <tr>
+                <th>@Html.DisplayNameFor(model => model.Pancard)</th>
+                <td>@Html.DisplayFor(model => model.Pancard)</td>
+                <th>@Html.DisplayNameFor(model => model.PancardDoc)</th>
+                <td>@Html.DisplayFor(model => model.PancardDoc) @Html.ActionLink("download", "downloadPan", "SuperAdmin", new { id = Model.panId }, null) @Html.ActionLink("View", "InsuranceReportPAN", "SuperAdmin", new { id = Model.panId }, null)</td>
+            </tr>
+
+            <tr>
+                <th>@Html.DisplayNameFor(model => model.AddressProofId)</th>
+                <td>@Html.DisplayFor(model => model.AddressProofId)</td>
+                <th>@Html.DisplayNameFor(model => model.AddressProofDoc)</th>
+                <td>@Html.DisplayFor(model => model.AddressProofDoc) @Html.ActionLink("download", "downloadAddressproof", "SuperAdmin", new { id = Model.panId }, null) @Html.ActionLink("View", "InsuranceReportADD", "SuperAdmin", new { id = Model.panId }, null)</td>
+            </tr>
+
+            <tr>
+                <th>@Html.DisplayNameFor(model => model.GSTProvisionalID)</th>
+                <td>@Html.DisplayFor(model => model.GSTProvisionalID)</td>
+                <th>@Html.DisplayNameFor(model => model.GSTDucument)</th>
+                <td>@Html.DisplayFor(model => model.GSTDucument) @Html.ActionLink("download", "downloadGST", "SuperAdmin", new { id = Model.BusId }, null) @Html.ActionLink("View", "InsuranceReportGST", "SuperAdmin", new { id = Model.BusId }, null)</td>
+            </tr>
+
+            <tr>
+                <th>@Html.DisplayNameFor(model => model.TANNo)</th>
+                <td>@Html.DisplayFor(model => model.TANNo)</td>
+                <th>@Html.DisplayNameFor(model => model.TANDoc)</th>
+                <td>@Html.DisplayFor(model => model.TANDoc) @Html.ActionLink("download", "downloadTAN", "SuperAdmin", new { id = Model.BusId }, null) @Html.ActionLink("View", "InsuranceReportTAN", "SuperAdmin", new { id = Model.BusId }, null)</td>
+            </tr>
+
+            <tr>
+                <th>@Html.DisplayNameFor(model => model.CINNo)</th>
+                <td>@Html.DisplayFor(model => model.CINNo)</td>
+                <th>@Html.DisplayNameFor(model => model.CINDoc)</th>
+                <td>@Html.DisplayFor(model => model.CINDoc) @Html.ActionLink("download", "downloadCIN", "SuperAdmin", new { id = Model.BusId }, null)   @Html.ActionLink("View", "InsuranceReportCIN", "SuperAdmin", new { id = Model.BusId }, null)</td>
+            </tr>
+            <tr>
+                <th>@Html.DisplayNameFor(model => model.Ag)</th>
+                <td>@Html.DisplayFor(model => model.Ag)</td>
+            </tr>
+
+            <tr>
+                <th>
+                    <h3>
+                        Vendor Bank Information:
+                    </h3>
+                </th>
+            </tr>
+
+            <tr>
+                <th>@Html.DisplayNameFor(model => model.AccountNo)</th>
+                <td>@Html.DisplayFor(model => model.AccountNo)</td>
+                <th>@Html.DisplayNameFor(model => model.IFSCcode)</th>
+                <td>@Html.DisplayFor(model => model.IFSCcode)</td>
+            </tr>
+
+            <tr>
+                <th>@Html.DisplayNameFor(model => model.BankName)</th>
+                <td>@Html.DisplayFor(model => model.BankName)</td>
+                <th>@Html.DisplayNameFor(model => model.AccountHolderName)</th>
+                <td>@Html.DisplayFor(model => model.AccountHolderName)</td>
+            </tr>
+
+            
+
+            <tr>
+                <th>@Html.DisplayNameFor(model => model.CancelCheque)</th>
+                <td>@Html.DisplayFor(model => model.CancelCheque) @Html.ActionLink("download", "downloadCheque", "SuperAdmin", new { id = Model.panId }, null) @Html.ActionLink("View", "InsuranceReportCHE", "SuperAdmin", new { id = Model.panId }, null)</td>
+            </tr>
+
+        </table>
+        </div>
+</body>
+</html>
+

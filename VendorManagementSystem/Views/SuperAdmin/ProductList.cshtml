@@ -1,0 +1,260 @@
+﻿@model IPagedList<VendorManagementSystem.Models.UploadProduct>
+@using PagedList
+@using PagedList.Mvc
+@{
+    ViewBag.Title = "ProductList";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+
+
+<html>
+<head>
+    <style>
+        table, th, td {
+            border: 1px solid black;
+            border-collapse: collapse;
+        }
+
+        th, td {
+            padding: 5px;
+            text-align: left;
+        }
+
+        #tblid {
+            margin-top: 0px;
+        }
+
+        #bdyid {
+            margin-top: 10px;
+        }
+
+        #abc {
+        }
+
+        #lstid {
+            margin-left: 105px;
+            color: white;
+            background-color: darkslategray;
+            margin-top: 50px;
+        }
+
+        h2 {
+            color: maroon;
+        }
+
+        #addid {
+            margin-left: 750px;
+            color: white;
+            background-color: darkslategray;
+            margin-top: 50px;
+        }
+         #ddd{
+            margin-left:900px;
+        }
+    </style>
+</head>
+<body id="bdyid">
+
+    <ol class="breadcrumb">
+        <li>@Html.ActionLink("AdminHome", "AdminPortal", "SuperAdmin", routeValues: null, htmlAttributes: new { id = "registerLink" })</li>
+        <li class="active">ProductList</li>
+    </ol>
+    <table id="ddd">
+        <tr>
+            <td>
+                @Html.ActionLink("ExportPdf", "CreatePdf")
+            </td>
+            <td>
+               @using (Html.BeginForm("ExportToWordVA", "VendorAccess", FormMethod.Post))
+               {
+                <input type="hidden" name="GridHtml" />
+                    <input type="submit" id="btnESubmit" value="ExportWord" />
+               }
+            </td>
+            <td>
+                @using (Html.BeginForm("ExportExcelVA", "VendorAccess", FormMethod.Post))
+                {
+                    <input type="hidden" name="GridHtml" />
+                    <input type="submit" id="btnESubmit" value="ExportExcel" />
+                }
+            </td>
+        </tr>
+    </table>
+   
+    <div id="docx">
+        <div class="WordSection1">
+                 @using (Html.BeginForm("DeleteFiles", "SuperAdmin", FormMethod.Post))
+                 {
+                    <div id="Grid">
+                        <table id="tblid" style="width:100%">
+                            <input type="submit" value="Delete selected files" />
+                            <caption><h2>List Of Products</h2></caption>
+                            <tr>
+                                <th>
+                                    <input type="checkbox" id="checkAll" />
+                                    <label>Select All</label>
+                                </th>
+                                <th>
+                                    @Html.DisplayNameFor(model => model.First().ProductName)
+                                </th>
+                                <th>
+                                    @Html.DisplayNameFor(model => model.First().ProductPrice)
+                                </th>
+                                <th>
+                                    @Html.DisplayNameFor(model => model.First().SellingCategory)
+                                </th>
+                            </tr>
+
+                            @foreach (var item in Model)
+                            {
+                                <tr id="row_@item.ProductId">
+                                    <td>
+                                        <input type="checkbox" class="checkBox" value="@item.ProductId" name="ids" />
+                                    </td>
+                                    <td>
+                                        @Html.DisplayFor(modelItem => item.ProductName)
+                                    </td>
+                                    <td>
+                                        @Html.DisplayFor(modelItem => item.ProductPrice)
+                                    </td>
+                                    <td>
+                                        @Html.DisplayFor(modelItem => item.SellingCategory)
+                                    </td>
+                                    <td>
+                                        @Html.ActionLink("Details", "productDetail", new { id = item.ProductId }) |
+                                        <a href="#" class="btn btn-danger" onclick="ConfirmDelete(@item.ProductId)">Delete</a>
+                                    </td>
+                                </tr>
+                            }
+                            @Html.PagedListPager(Model, page => Url.Action("ProductList", new { page, search = Request.QueryString["search"] }))
+                        </table>
+                        <input type="hidden" id="hiddenProductId" />
+                    </div>
+                 }
+        </div>
+    </div>
+</body>
+</html>
+
+@*<script>
+    $(document).ready(function () {
+        $("#det").mouseover(function () {
+            $("#det").css("background-color", "green");
+        });
+    });
+</script>*@
+
+@*Popup modal for deleting visitor records.*@
+<div class="modal fade" id="myModal">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <a href="#" class="close" data-dismiss="modal">&times;</a>
+                <h4 class="modal-title">Delete Product</h4>
+            </div>
+            <div class="modal-body">
+                <h4>Are you sure to delete this Product?</h4>
+                <form id="form"></form>
+            </div>
+            <div class="modal-footer">
+                <a href="#" class="btn btn-success" onclick="DeleteProduct()" id="DeleteProductRecord" data-dismiss="modal">Delete</a>
+                <a href="#" class="btn btn-default" data-dismiss="modal">Cancel</a>
+            </div>
+        </div>
+    </div>
+</div>
+
+@*Deleting record using bootstrap modal*@
+<script>
+    var ConfirmDelete = function (ProdId) {
+        $("#hiddenProductId").val(ProdId);
+        $("#myModal").modal('show');
+    }
+
+    var DeleteProduct = function () {
+
+        $("#loaderDiv").show();
+
+        var proId = $("#hiddenProductId").val();
+
+        $.ajax({
+            type: "POST",
+            url: "/SuperAdmin/productDelete",
+            data: { ProdId: proId },
+            success: function(result){
+                $("#loaderDiv").hide();
+                $("#myModal").hide();
+                $("#row_" + proId).remove();
+            }
+
+        })
+      }
+</script>
+
+@*Exporting Doc File*@
+<script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.8.3/jquery.min.js"></script>
+<script type="text/javascript">
+        window.export.onclick = function () {
+
+            if (!window.Blob) {
+                alert('Your legacy browser does not support this action.');
+                return;
+            }
+
+            var html, link, blob, url, css;
+
+            // EU A4 use: size: 841.95pt 595.35pt;
+            // US Letter use: size:11.0in 8.5in;
+
+            css = (
+              '<style>' +
+              'page WordSection1{size: 841.95pt 595.35pt;mso-page-orientation: landscape;}' +
+              'div.WordSection1 {page: WordSection1;}' +
+              'table{border-collapse:collapse;}td{border:1px gray solid;width:5em;padding:2px;}' +
+              '</style>'
+            );
+
+            html = window.docx.innerHTML;
+            blob = new Blob(['\ufeff', css + html], {
+                type: 'application/msword'
+            });
+            url = URL.createObjectURL(blob);
+            link = document.createElement('A');
+            link.href = url;
+            // Set default file name.
+            // Word will append file extension - do not add an extension here.
+            link.download = 'Document';
+            document.body.appendChild(link);
+            if (navigator.msSaveOrOpenBlob) navigator.msSaveOrOpenBlob(blob, 'Document.doc'); // IE10-11
+            else link.click();  // other browsers
+            document.body.removeChild(link);
+        };
+</script>
+
+@*//Exporting Excel File*@
+<script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.8.3/jquery.min.js"></script>
+<script type="text/javascript">
+        $(function () {
+            $("#btnESubmit").click(function () {
+                $("input[name='GridHtml']").val($("#Grid").html());
+            });
+        });
+</script>
+
+
+@*Implementation of Select All Checkbox*@
+<script>
+$(document).ready(function () {
+
+    $("#checkAll").click(function () {
+        $(".checkBox").prop('checked',
+            $(this).prop('checked'));
+    });
+});
+</script>

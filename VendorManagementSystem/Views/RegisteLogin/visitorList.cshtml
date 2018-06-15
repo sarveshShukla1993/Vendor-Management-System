@@ -1,0 +1,189 @@
+﻿@model VendorManagementSystem.ProjectViewModel.VisitorView
+
+
+@{
+    ViewBag.Title = "visitorList";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+<script src="~/Scripts/jquery-3.3.1.js"></script>
+<script src="~/Scripts/jquery.validate.js"></script>
+<script src="~/Scripts/jquery.validate.unobtrusive.js"></script>
+
+<link href="http://ajax.googleapis.com/ajax/libs/jqueryui/1.8/themes/cupertino/jquery-ui.css" type="text/css" rel="Stylesheet" />
+<script src="http://ajax.googleapis.com/ajax/libs/jquery/1.4/jquery.min.js" type="text/javascript"></script>
+<script src="http://ajax.googleapis.com/ajax/libs/jqueryui/1.8/jquery-ui.min.js" type="text/javascript"></script>
+<!DOCTYPE html>
+<html>
+    <head>
+        <link href="~/Content/Margin.css" rel="stylesheet" />
+    </head>
+    <body>
+        <ol class="breadcrumb">
+            <li><a href="HomePage">VMSHome</a></li>
+            <li class ="active">visitorList</li>
+        </ol>
+        <div id="mrgn">
+            <h2>
+                Visitor Registration
+            </h2>
+
+        </div>
+        <div id="bdymrgn">
+            @using (Html.BeginForm())
+            {
+                @Html.AntiForgeryToken()
+
+                <div class="form-horizontal">
+                    @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+                    <div class="form-group">
+                        @Html.LabelFor(model => model.PersonName, "User Name", htmlAttributes: new { @class = "control-label col-md-3", @id = "lname" })
+                        <div class="col-md-10" id="disfromlabel">
+                            @Html.EditorFor(model => model.PersonName, new { htmlAttributes = new { @class = "form-control", MaxLength = "30", @id = "numb" } })
+                            @Html.ValidationMessageFor(model => model.PersonName, "", new { @class = "text-danger" })
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        @Html.LabelFor(model => model.PersonAge,"User Age", htmlAttributes: new { @class = "control-label col-md-3", @id = "lname" })
+                        <div class="col-md-10" id="disfromlabel">
+                            @Html.EditorFor(model => model.PersonAge, new { htmlAttributes = new { @class = "form-control", MaxLength = "3", @id = "alpha1" } })
+                            <label id="msg"></label>
+                            @Html.ValidationMessageFor(model => model.PersonAge, "", new { @class = "text-danger" })
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        @Html.LabelFor(model => model.Email, "User Email", htmlAttributes: new { @class = "control-label col-md-3", @id = "lname" })
+                        <div class="col-md-10" id="disfromlabel">
+                            @Html.EditorFor(model => model.Email, new { htmlAttributes = new { @class = "form-control", @id = "ageval", MaxLength = "35" } })
+                            <label id="msg"></label>
+                            @Html.ValidationMessageFor(model => model.Email, "", new { @class = "text-danger" })
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        @Html.LabelFor(model => model.Purpose,"Purpose of visit",htmlAttributes: new { @class = "control-label col-md-4", @id = "lname" })
+                        <div class="col-md-10" id="disfromlabel">
+                            @Html.DropDownListFor(model => model.Purpose, new SelectList(ViewBag.visitlist, "PurposeId", "Purpose", "IsDeleted"), "--Select Category--", new { @class = "form-control", @id = "ddfocus" } )
+                            <br />@Html.ValidationMessageFor(model => model.Purpose, "", new { @class = "text-danger" })
+                             </div>
+                    </div>
+
+                    <div class="form-group">
+                        @Html.LabelFor(model => model.ContactPerson,"Contact Person", htmlAttributes: new { @class = "control-label col-md-4", @id = "lname" })
+                        <div class="col-md-10" id="disfromlabel">
+                            @Html.EditorFor(model => model.ContactPerson, new { htmlAttributes = new { @class = "form-control", MaxLength = "30", @id = "autoc" } })
+                            @Html.ValidationMessageFor(model => model.ContactPerson, "", new { @class = "text-danger" })
+                        </div>
+                    </div>
+
+                    @*<div class="form-group">
+                        @Html.LabelFor(model => model.MeetingDate,"Visit Date", htmlAttributes: new { @class = "control-label col-md-3", @id = "lname" })
+                        <div class="col-md-10" id="disfromlabel">
+                            @Html.EditorFor(model => model.MeetingDate, new { htmlAttributes = new { @class = "form-control", @type = "date" } })
+                            @Html.ValidationMessageFor(model => model.MeetingDate, "", new { @class = "text-danger" })
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        @Html.LabelFor(model => model.MeetingTime, "Visit Time", htmlAttributes: new { @class = "control-label col-md-3", @id = "lname" })
+                        <div class="col-md-10" id="disfromlabel">
+                                @Html.EditorFor(model => model.MeetingTime, new { htmlAttributes = new { @class = "form-control"} })
+                              @Html.ValidationMessageFor(model => model.MeetingTime, "", new { @class = "text-danger" })
+                        </div>
+                    </div>*@
+
+                    <div class="form-group">
+                        @Html.LabelFor(model => model.AddressLine,"Address", htmlAttributes: new { @class = "control-label col-md-3", @id = "lname" })
+                        <div class="col-md-10" id="disfromlabel">
+                            @Html.TextAreaFor(model => model.AddressLine, new { htmlAttributes = new { @class = "form-control", maxlength = "35"} })
+                           <br /> @Html.ValidationMessageFor(model => model.AddressLine, "", new { @class = "text-danger" })
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <div class="col-md-offset-3 col-md-12">
+                            <input type="submit" class="btn btn-primary" value="Submit" />
+                        </div>
+                    </div>
+                </div>
+            }
+        </div>
+   </body>
+</html>
+
+@*AutoComplete ajax code*@
+<script type="text/javascript">
+    $("#autoc").autocomplete({
+                source: function (request, response) {
+                    $.ajax({
+                        url: '@Url.Action("visitoListContactPersonAutoC")',
+                        dataType: "json",
+                        data: { term: $("#autoc").val() },
+                        success: function (data) {
+                            response($.map(data, function (item) {
+                                return { label: item, value: item };
+                            }))
+                        },
+                      })
+                     },
+                  });
+</script>
+
+<script>//For not accepting numeric values
+               $( document ).ready(function() {
+                   $("#numb").keypress(function (e) {
+                       var key = e.which;
+                       if (key >= 48 && key <= 57) {
+                           e.preventDefault();
+                       }
+                   });
+
+                   $("#alpha1").keydown(function (e) {
+                       var key = e.which;
+                       if (key >= 65 && key <= 90) {
+                           e.preventDefault();
+                       }
+                   });
+
+                   $("#autoc").keypress(function (e) {
+                       var key = e.which;
+                       if (key >= 48 && key <= 57) {
+                           e.preventDefault();
+                       }
+                   });
+
+                   //focus textfiels when mouse enters
+                   $("#numb").mouseenter(function () {
+                       $("#numb").focus();
+                   });
+
+                   $("#alpha1").mouseenter(function () {
+                       $("#alpha1").focus();
+                   });
+
+                   $("#ageval").mouseenter(function () {
+                       $("#ageval").focus();
+                   });
+
+                   $("#ddfocus").mouseenter(function () {
+                       $("#ddfocus").focus();
+                   });
+                   
+                   $("#autoc").mouseenter(function () {
+                       $("#autoc").focus();
+                   });
+               });
+    </script>
+
+<script>//disabling back button
+history.pushState(null, null, location.href);
+    window.onpopstate = function () {
+        history.go(1);
+    };
+</script>
+
+
+@section Scripts {
+    @Scripts.Render("~/bundles/jqueryval")
+}
+

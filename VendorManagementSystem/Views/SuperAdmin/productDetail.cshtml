@@ -1,0 +1,86 @@
+﻿@model VendorManagementSystem.Models.UploadProduct
+
+@{
+    ViewBag.Title = "productDetail";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<html>
+<head>
+    <style>
+        table {
+            font-family: arial, sans-serif;
+            border-collapse: collapse;
+            width: 100%;
+        }
+
+        h2 {
+            margin-left: 460px;
+            color: maroon;
+        }
+
+        td, th {
+            border: 1px solid #dddddd;
+            text-align: left;
+            padding: 8px;
+        }
+
+        tr:nth-child(even) {
+            background-color: #dddddd;
+        }
+    </style>
+</head>
+<body>
+   
+    <ol class="breadcrumb">
+        <li>@Html.ActionLink("AdminHome", "AdminPortal", "SuperAdmin", routeValues: null, htmlAttributes: new { id = "registerLink" })</li>
+        <li>@Html.ActionLink("ProductList", "ProductList", "SuperAdmin", routeValues: null, htmlAttributes: new { id = "registerLink" })</li>
+        <li class="active">productDetail</li>
+    </ol>
+
+
+    <h2>Product Details</h2>
+    <table>
+        @if (ViewBag.pic != null)
+            {
+
+            <th>@Html.DisplayNameFor(model => model.ProductImage)</th>
+                <td> <img src="~/ProductImage/@ViewBag.pic" style="width:220px;height:170px; margin-left:0px; margin-top:23px;" /> </td>
+        }
+        else
+        {
+
+            <th> @Html.DisplayNameFor(model => model.ProductImage) </th>
+                <td> <img src="~/ProductImage/defaultimage.png" style="width:150px;height:150px; margin-left:0px; margin-top:23px;" /> </td>
+
+        }
+
+        <tr>
+            <th>@Html.DisplayNameFor(model => model.ProductName)</th>
+            <td>@Html.DisplayFor(model => model.ProductName)</td>
+            <th>@Html.DisplayNameFor(model => model.ProductPrice)</th>
+            <td>@Html.DisplayFor(model => model.ProductPrice)</td>
+        </tr>
+        <tr>
+            <th>@Html.DisplayNameFor(model => model.ProductQuantity)</th>
+            <td>@Html.DisplayFor(model => model.ProductQuantity)</td>
+            <th>@Html.DisplayNameFor(model => model.ProductDescription)</th>
+            <td>@Html.DisplayFor(model => model.ProductDescription)</td>
+        </tr>
+        <tr>
+            <th>@Html.DisplayNameFor(model => model.ProductId)</th>
+            <td>@Html.DisplayFor(model => model.ProductId)</td>
+            <th>@Html.DisplayNameFor(model => model.SellingCategory)</th>
+            <td>@Html.DisplayFor(model => model.SellingCategory)</td>
+        </tr>
+
+    </table>
+
+    <p>
+        @Html.ActionLink("Delete", "productDelete", new { id = Model.ProductId }, new { id = Model.ProductName }) |
+        @Html.ActionLink("Back to List", "ProductList")
+    </p>
+
+
+</body>
+</html>

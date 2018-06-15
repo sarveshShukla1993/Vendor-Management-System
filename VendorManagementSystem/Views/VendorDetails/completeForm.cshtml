@@ -1,0 +1,35 @@
+﻿
+@{
+    ViewBag.Title = "completeForm";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+
+<html>
+    <head>
+        <style>
+            h3{
+                color:forestgreen;
+            }
+        </style>
+    </head>
+
+    <body>
+
+        <ol class="breadcrumb">
+            <li><a href="PCDetails">PersonalDetails</a></li>
+            <li><a href="BusinessDetails">CompanyLegalInformation</a></li>
+            <li><a href="BankDetails">BankDetails</a></li>
+            <li class="active">FormCompleted</li>
+        </ol>
+
+
+        <h3> Congratulation @ViewBag.username ,</h3>
+
+        <p>
+            <h4> Your Registration has been completed. we have sent you an email on your given email Address " @ViewBag.emailid " with attached VendorId and Password.</h4>
+            <h4>   you can login by your credentials.</h4> <br />
+            <a href="http://localhost:50303/RegisteLogin/VendorLogin">Go To Login</a>
+        </p>
+    </body>
+</html>

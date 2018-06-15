@@ -1,0 +1,245 @@
+﻿@model IEnumerable<VendorManagementSystem.Models.SellingCategoryModel>
+
+@{
+    ViewBag.Title = "AddSellingCategory";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+
+<html>
+    <head>
+        <style>
+            table, th, td {
+                border: 1px solid black;
+                margin-left: 440px;
+            }
+
+            th, td {
+                padding: 5px;
+                text-align: center;
+            }
+
+            h2 {
+                color: maroon;
+                margin-left: 460px;
+            }
+
+            #abc {
+                margin-left: 750px;
+            }
+        </style>
+    </head>
+    <body>
+        <ol class="breadcrumb">
+            <li>@Html.ActionLink("AdminHome", "AdminPortal", "SuperAdmin", routeValues: null, htmlAttributes: new { id = "registerLink" })</li>
+            <li class="active">Category List</li>
+        </ol>
+
+        <h2>Selling Category List</h2>
+        <a href="#" class="btn btn-success" onclick="ConfirmAdd()" id="abc">+</a>
+        <table id="tblid" style="width:30%">
+            <tr>
+                <th>
+                    <label>Category</label>
+                </th>
+            </tr>
+            @foreach (var item in Model)
+            {
+                <tr id="row_@item.Id">
+                    <td>
+                        @Html.DisplayFor(modelItem => item.hobbyname)
+                    </td>
+                    <td>
+                        <div>
+                            <a href="#" class="btn btn-success" onclick="ConfirmEdit(@item.Id)" id="ab">Edit</a>
+                            <a href="#" class="btn btn-danger" onclick="ConfirmDelete(@item.Id)" data-dismiss="modal">Delete</a>
+                        </div>
+                    </td>
+                </tr>
+            }
+        </table>
+        <input type="hidden" id="hiddenProductId" />
+    </body>
+</html>
+
+@*Popup modal for Adding Purpose.*@
+<div class="modal fade" id="myModal">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <a href="#" class="close" data-dismiss="modal">&times;</a>
+                <h4 class="modal-title">Add Category</h4>
+            </div>
+            <form id="form">
+                <div class="modal-body">
+                    <label>Category Name</label>
+                    <input type="text" id="textinput" placeholder="Enter Category" />
+                </div>
+                <div class="modal-footer">
+                    <a href="#" class="btn btn-success" onclick="AddCategory()" id="AddP" data-dismiss="modal">Submit</a>
+                    <a href="#" class="btn btn-default" data-dismiss="modal">Cancel</a>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+
+@*Adding data to database using bootstrap modal*@
+<script>
+
+        var ConfirmAdd = function () {
+            $("#myModal").modal('show');
+        }
+
+        var AddCategory = function () {
+            if ($("#textinput").val() == "" || $("#textinput").val() == null)
+            {
+                alert("Please insert Category name.")
+            }
+            else
+            {
+                var Prps = $("#textinput").val();
+                $.ajax({
+                    type: "POST",
+                    url: "@Url.Action("AddSellingCategory")",
+                    data: { sell: Prps },
+                    success: function (result) {
+                        if (result == false) {
+                            alert("Data already exists.")
+                        }
+                        else {
+                            alert('saved sucessfully')
+                        }
+                        $("#myModal").hide();
+                        //$("#row_" + result).append(result);
+                        //$("#passdataa").html(response);
+                        window.location.reload();
+                    }
+
+                })
+            }
+        }
+</script>
+
+
+@*Popup modal for Editing Purpose.*@
+<div class="modal fade" id="myEditModal">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <a href="#" class="close" data-dismiss="modal">&times;</a>
+                <h4 class="modal-title">Edit Category</h4>
+            </div>
+            <form id="form">
+                <div class="modal-body">
+                    <label>Category Name</label>
+                    <input type="text" id="editinput" />
+                </div>
+                <div class="modal-footer">
+                    <a href="#" class="btn btn-success" onclick="EditCategory()" id="EditP" data-dismiss="modal">Submit</a>
+                    <a href="#" class="btn btn-default" data-dismiss="modal">Cancel</a>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+@*Editing data to database using bootstrap modal*@
+<script>
+
+    var ConfirmEdit = function (id) {
+        $("#hiddenProductId").val(id);
+        $.ajax({
+            type: "GET",
+            url: '/SuperAdmin/EditCategory',
+            data: { catId: id },
+            success: function (data) {
+                $("#editinput").val(data);
+                $("#myEditModal").modal('show');
+            }
+        })
+    }
+    var EditCategory = function () {
+            if ($("#editinput").val() == "" || $("#editinput").val() == null)
+            {
+                alert("Please insert Category name.")
+            }
+            else
+            {
+                var CatId = $("#hiddenProductId").val();
+                var Prps = $("#editinput").val();
+                $.ajax({
+                    type: "POST",
+                    url: '@Url.Action("EditCategory")',
+                    data: { EditValue: Prps, catId: CatId },
+                    success: function (result) {
+                        if (result == false) {
+                            alert("Data already exists.")
+                        }
+                        else {
+                            alert('saved sucessfully')
+                        }
+                        $("#myEditModal").hide();
+                        window.location.reload();
+                    }
+                })
+            }
+        }
+</script>
+
+
+@*Popup modal for Deleting Purpose.*@
+<div class="modal fade" id="myDelModal">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <a href="#" class="close" data-dismiss="modal">&times;</a>
+                <h4 class="modal-title">Delete Category</h4>
+            </div>
+            <form id="form">
+                <div class="modal-body">
+                    <h4>Are you Sure to delete this category.</h4>
+                </div>
+                <div class="modal-footer">
+                    <a href="#" class="btn btn-danger" onclick="DeleteCategory()" id="DelP" data-dismiss="modal">Delete</a>
+                    <a href="#" class="btn btn-default" data-dismiss="modal">Cancel</a>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+@*Deleting record using bootstrap modal*@
+<script>
+    var ConfirmDelete = function (CatId) {
+        $("#hiddenProductId").val(CatId);
+        $("#myDelModal").modal('show');
+    }
+
+    var DeleteCategory = function () {
+        var catId = $("#hiddenProductId").val();
+        $.ajax({
+            type: "GET",
+            url: '@Url.Action("DeleteCategory")',
+            data: { CtgId: catId },
+            success: function (result) {
+                if (result == false)
+                {
+                    alert('This category is used by some vendor. it can not be deleted.')
+                    $("#myDelModal").hide();
+                }
+                else {
+                    alert('deleted sucessfully')
+                    $("#myDelModal").hide();
+                    $("#row_" + catId).remove();
+                }
+            }
+        })
+      }
+</script>

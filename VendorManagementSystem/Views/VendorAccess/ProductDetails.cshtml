@@ -1,0 +1,101 @@
+﻿@model VendorManagementSystem.Models.UploadProduct
+
+@{
+    ViewBag.Title = "ProductDetails";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+
+<html>
+<head>
+    <style>
+        table {
+            font-family: arial, sans-serif;
+            border-collapse: collapse;
+            width: 100%;
+        }
+
+        h2{
+            margin-left:460px;
+            color:maroon;
+        }
+        td, th {
+            border: 1px solid #dddddd;
+            text-align: left;
+            padding: 8px;
+        }
+
+        tr:nth-child(even) {
+            background-color: #dddddd;
+        }
+        #tblid{
+            margin-left:900px;
+            width:20%;
+        }
+    </style>
+</head>
+
+<body>
+    <ol class="breadcrumb">
+        <li>@Html.ActionLink("Home", "Index", "VendorAccess")</li>
+        <li>@Html.ActionLink("ProductList", "VendorList")</li>
+        <li class="active">ChangeImage</li>
+    </ol>
+    <table id="tblid">
+        <tr>
+        
+            <td> @Html.ActionLink("Edit", "EditRecord", new { id = Model.ProductId }) </td>
+            <td> @Html.ActionLink("Back to List", "VendorList")</td>
+        </tr>
+    </table>
+
+        <h2>Product Details</h2>
+        <table>
+            @if (ViewBag.image != null)
+            {
+                string str = ViewBag.image;
+                string[] strArr = null;
+                char splitchar = ',';
+                strArr = str.Split(splitchar);
+                <th>@Html.DisplayNameFor(model => model.ProductImage)</th>
+                for (int i = 0; i < strArr.Count(); i++)
+                {
+                    <td><img src="~/ProductImage/@strArr[i]" style="width:220px;height:170px; margin-left:0px; margin-top:23px;" /> </td>
+                }
+                @Html.ActionLink("Change Image", "changeImage", new { id = Model.ProductId })
+                @*<th>@Html.DisplayNameFor(model => model.ProductImage)</th>
+                <td> <img src="~/ProductImage/@ViewBag.image" style="width:220px;height:170px; margin-left:0px; margin-top:23px;" /> @Html.ActionLink("Change Image", "changeImage", new { id = Model.ProductId }) </td>*@
+                
+            }
+            else
+            {
+                <th> @Html.DisplayNameFor(model => model.ProductImage) </th>
+                <td> <img src="~/images/defImage.jpg" style="width:150px;height:150px; margin-left:0px; margin-top:23px;" /> </td>
+
+            }
+
+            <tr>
+                <th>@Html.DisplayNameFor(model => model.ProductName)</th>
+                <td>@Html.DisplayFor(model => model.ProductName)</td>
+                <th>@Html.DisplayNameFor(model => model.ProductPrice)</th>
+                <td>@Html.DisplayFor(model => model.ProductPrice)</td>
+            </tr>
+            <tr>
+                <th>@Html.DisplayNameFor(model => model.ProductQuantity)</th>
+                <td>@Html.DisplayFor(model => model.ProductQuantity)</td>
+                <th>@Html.DisplayNameFor(model => model.ProductDescription)</th>
+                <td>@Html.DisplayFor(model => model.ProductDescription)</td>
+            </tr>
+            <tr>
+                <th>@Html.DisplayNameFor(model => model.ProductId)</th>
+                <td>@Html.DisplayFor(model => model.ProductId)</td>
+                <th>@Html.DisplayNameFor(model => model.SellingCategory)</th>
+                <td>@Html.DisplayFor(model => model.SellingCategory)</td>
+            </tr>
+
+        </table>
+        
+</body>
+</html>
+
+

@@ -1,0 +1,240 @@
+﻿@model IEnumerable<VendorManagementSystem.Models.VisitPurpose>
+
+@{
+    ViewBag.Title = "AddpurposeOfVisit";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+
+
+<html>
+    <head>
+        <style>
+            table, th, td {
+                border: 1px solid black;
+                margin-left:440px;
+            }
+            th, td {
+                padding: 5px;
+                text-align: center;
+            }
+            h2 {
+                color: maroon;
+                margin-left: 520px;
+            }
+            #abc{
+                margin-left:750px;
+            }
+        </style>
+    </head>
+    <body>
+        <ol class="breadcrumb">
+            <li>@Html.ActionLink("AdminHome", "AdminPortal", "SuperAdmin", routeValues: null, htmlAttributes: new { id = "registerLink" })</li>
+            <li class="active"> Purpose List</li>
+        </ol>
+       <h2>Purpose List</h2>
+        <a href="#" class="btn btn-success" onclick="ConfirmAdd()" id="abc">+</a>
+        <table id="tblid" style="width:30%">
+            <tr>
+                <th>
+                    @Html.DisplayNameFor(model => model.Purpose)
+                </th>
+            </tr>
+            @foreach (var item in Model)
+            {
+                    <tr id="row_@item.PurposeId">
+                        <td>
+                            @Html.DisplayFor(modelItem => item.Purpose)
+                        </td>
+                        <td>
+                            <div>
+                                <a href="#" class="btn btn-success" onclick="ConfirmEdit(@item.PurposeId)" id="ab">Edit</a>
+                                <a href="#" class="btn btn-danger" onclick="ConfirmDelete(@item.PurposeId)" data-dismiss="modal">Delete</a>
+                            </div>
+                       </td>
+                    </tr>
+            }
+        </table>
+        <input type="hidden" id="hiddenProductId" />
+    </body>
+</html>
+
+@*Popup modal for Adding Purpose.*@
+<div class="modal fade" id="myModal">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <a href="#" class="close" data-dismiss="modal">&times;</a>
+                <h4 class="modal-title">Add Purpose</h4>
+            </div>
+            <form id="form">
+                <div class="modal-body">
+                    <label>Purpose Name</label>
+                    <input type="text" id="textinput" placeholder="Enter Purpose" />
+                </div>
+                <div class="modal-footer">
+                    <a href="#" class="btn btn-success" onclick="AddPurpose()" id="AddP" data-dismiss="modal">Submit</a>
+                    <a href="#" class="btn btn-default" data-dismiss="modal">Cancel</a>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+
+@*Adding data to database using bootstrap modal*@
+<script>
+
+        var ConfirmAdd = function () {
+            $("#myModal").modal('show');
+        }
+
+        var AddPurpose = function () {
+            if ($("#textinput").val() == "" || $("#textinput").val() == null)
+            {
+                alert("Please insert purpose name.")
+            }
+            else
+            {
+                var Prps = $("#textinput").val();
+                $.ajax({
+                    type: "POST",
+                    url: "/SuperAdmin/AddpurposeOfVisit",
+                    data: { ProdId: Prps },
+                    success: function (result) {
+                        if(result == false)
+                        {
+                            alert("Data already exists.");
+                        }
+                        else
+                        {
+                            alert('saved sucessfully')
+                        }
+                        
+                        $("#myModal").hide();
+                        //$("#row_" + result).append(result);
+                        //$("#passdataa").html(response);
+                        window.location.reload();
+                    }
+
+                })
+            }
+        }
+</script>
+
+
+@*Popup modal for Editing Purpose.*@
+<div class="modal fade" id="myEditModal">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <a href="#" class="close" data-dismiss="modal">&times;</a>
+                <h4 class="modal-title">Edit Purpose</h4>
+            </div>
+            <form id="form">
+                <div class="modal-body">
+                    <label>Purpose Name</label>
+                    <input type="text" id="editinput"/>
+                </div>
+                <div class="modal-footer">
+                    <a href="#" class="btn btn-success" onclick="EditPurpose()" id="EditP" data-dismiss="modal">Submit</a>
+                    <a href="#" class="btn btn-default" data-dismiss="modal">Cancel</a>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+@*Editing data to database using bootstrap modal*@
+<script>
+
+    var ConfirmEdit = function (id) {
+        $("#hiddenProductId").val(id);
+        $.ajax({
+            type: "GET",
+            url: '/SuperAdmin/EditPurpose',
+            data: { purId: id },
+            success: function (data) {
+                $("#editinput").val(data);
+                $("#myEditModal").modal('show');
+            }
+        })
+    }
+    var EditPurpose = function () {
+            if ($("#editinput").val() == "" || $("#editinput").val() == null)
+            {
+                alert("Please insert purpose name.")
+            }
+            else
+            {
+                var propId = $("#hiddenProductId").val();
+                var Prps = $("#editinput").val();
+                $.ajax({
+                    type: "POST",
+                    url: "/SuperAdmin/EditPurpose",
+                    data: { EditValue: Prps, purpId: propId },
+                    success: function (data) {
+                        alert('saved sucessfully')
+                        $("#myEditModal").hide();
+                        window.location.reload();
+                    }
+
+                })
+            }
+        }
+</script>
+
+
+@*Popup modal for Deleting Purpose.*@
+<div class="modal fade" id="myDelModal">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <a href="#" class="close" data-dismiss="modal">&times;</a>
+                <h4 class="modal-title">Delete Purpose</h4>
+            </div>
+            <form id="form">
+                <div class="modal-body">
+                    <h4>Are you Sure to delete this purpose.</h4>
+                </div>
+                <div class="modal-footer">
+                    <a href="#" class="btn btn-danger" onclick="DeletePurpose()" id="DelP" data-dismiss="modal">Delete</a>
+                    <a href="#" class="btn btn-default" data-dismiss="modal">Cancel</a>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+@*Deleting record using bootstrap modal*@
+<script>
+    var ConfirmDelete = function (PurpId) {
+        $("#hiddenProductId").val(PurpId);
+        $("#myDelModal").modal('show');
+    }
+
+    var DeletePurpose = function () {
+        var propId = $("#hiddenProductId").val();
+        $.ajax({
+            type: "GET",
+            url: "/SuperAdmin/DeletePurpose",
+            data: { PropId: propId },
+            success: function(result){
+                if (result == false)
+                {
+                    alert('This purpose is used by some visitor. it can not be deleted.')
+                    $("#myDelModal").hide();
+                }
+                else {
+                    alert('deleted sucessfully')
+                    $("#myDelModal").hide();
+                    $("#row_" + propId).remove();
+                }
+            }
+        })
+      }
+</script>

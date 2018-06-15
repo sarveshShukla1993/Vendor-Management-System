@@ -1,0 +1,114 @@
+﻿@model VendorManagementSystem.ProjectViewModel.ProductUploadView
+@using VendorManagementSystem.ProjectViewModel
+
+<html>
+    <head>
+        <style>
+            tr{
+                margin-bottom:10px;
+                margin-top:10px;
+                margin-left:30px;
+            }
+            h3{
+                text-align:center;
+            }
+            #divId{
+                margin-left:85px;
+            }
+            .modal-header{
+                background-color:lightblue;
+            }
+            .modal-footer{
+                background-color:lightblue;
+            }
+            .modal-body{
+                background-color:blanchedalmond;
+            }
+        </style>
+    </head>
+    <body>
+            <div class="modal-header"> <h3>Add Product</h3></div>
+            @using (Html.BeginForm("ProductUploadMethod", "VendorAccess", FormMethod.Post, new { enctype = "multipart/form-data" }))
+            {
+                    <div class="modal-body">
+                        <div id="divId">
+                            <table>
+                                <tr>
+                                    <td>
+                                        @Html.LabelFor(model => model.ProductName, "Product Name", new { @class = "control-label", @id = "lname" })
+                                    </td>
+                                    <td>
+                                        @Html.EditorFor(model => model.ProductName, new { htmlAttributes = new { @class = "form-control", MaxLength = "30", @id = "numb" } })
+
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>
+                                        @Html.LabelFor(model => model.ProductPrice, "Product Price", htmlAttributes: new { @class = "control-label" })
+                                    </td>
+                                    <td>
+                                        @Html.EditorFor(model => model.ProductPrice, new { htmlAttributes = new { @class = "form-control", MaxLength = "12", @id = "alpha1" } })
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>
+                                        @Html.LabelFor(model => model.ProductQuantity, "Product Quantity", htmlAttributes: new { @class = "control-label" })
+                                    </td>
+                                    <td>
+                                        @Html.TextBoxFor(model => model.ProductQuantity, new { @class = "form-control", @id = "alpha2" })
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>
+                                        @Html.LabelFor(model => model.ProductDescription, "Description", htmlAttributes: new { @class = "control-label" })
+                                    </td>
+                                    <td>
+                                        @Html.EditorFor(model => model.ProductDescription, new { htmlAttributes = new { @class = "form-control", MaxLength = "40" } })
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>
+                                        @Html.LabelFor(model => model.ProductImage, "Product Image", htmlAttributes: new { @class = "control-label" })
+                                    </td>
+                                    <td>
+                                        <input type="file" id="FileUpload" class = "form-control" name = "file" multiple/> 
+                                        @*@Html.TextBox("file", "", new { type = "file", @class = "form-control", @name = "pImg"})*@
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>
+                                        @Html.LabelFor(model => model.SellingCategory, "Selling Category", htmlAttributes: new { @class = "control-label" })
+                                    </td>
+                                    <td>
+                                        @Html.DropDownListFor(model => model.SellingCategory, new SelectList(Enum.GetValues(typeof(Sellingcategory))), "--Select Product Category--", new { @class = "form-control" })
+                                    </td>
+                                </tr>
+                            </table>
+                        </div>
+                </div>
+                    <div class="modal-footer">
+                        <input type="submit" value="Submit" class="btn btn-success" />
+                        @*<button type="submit" id="approve-btn" class="btn btn-success">Submit</button>*@
+                        <button type="button" class="btn btn-danger" data-dismiss="modal">Cancel</button>
+                    </div>
+            }
+    </body>
+</html>
+
+@*<script type="text/javascript">
+    $(function () {
+        $('#approve-btn').click(function () {
+            //$('#modal-container').modal('hide');
+            $.ajax({
+                type: "POST",
+                url: "/VendorAccess/Lyubomir",
+                data: $(this),
+                success: function (data) {
+                    alert("Product has been uploaded.");
+                    $("#myModal").modal("hide");
+                    location.reload();
+                }
+            })
+        });
+    });
+</script>*@

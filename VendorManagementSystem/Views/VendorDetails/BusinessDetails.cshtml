@@ -1,0 +1,180 @@
+﻿@model VendorManagementSystem.ProjectViewModel.BusinessDetailsView
+
+@{
+    ViewBag.Title = "BusinessDetails";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<html>
+<head>
+    <link href="~/Content/Margin.css" rel="stylesheet" />
+    <style>
+
+        h3{
+            color:red;
+        }
+        #vbm{
+            margin-left:450px;
+        }
+    </style>
+</head>
+<body>
+    <ol class="breadcrumb">
+        <li><a href= "PCDetails">PersonalDetails</a></li>
+        <li class="active">CompanyLegalInformation</li>
+    </ol>
+
+    <div  id="mrgn">
+        <h2>
+            Business Details
+        </h2>
+        <div>
+            <h5>#All Star(*) marked fields are required. </h5>
+            <h5>#Please Upload only pdf  file.</h5>
+        </div>
+        
+    </div>
+   <div id="vbm">
+       @if (ViewBag.filemsg != null)
+       {
+           <h3> @ViewBag.filemsg </h3>
+       }
+   </div>
+    <div id="bdymrgn">
+        @using (Html.BeginForm("BusinessDetails","VendorDetails", FormMethod.Post, new { enctype = "multipart/form-data" }))
+        {
+            @Html.AntiForgeryToken()
+
+            <div class="form-horizontal">
+                @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+
+                <div class="form-group">
+                    
+                    @Html.LabelFor(model => model.BusinessName,"Company/Retail Name", htmlAttributes: new { @class = "control-label col-md-5", @id = "lname" })
+                    @Html.ValidationMessageFor(model => model.BusinessName, "*", new { @class = "text-danger" })
+                    <div class="col-md-10" id="disfromlabel">
+                        @Html.EditorFor(model => model.BusinessName, new { htmlAttributes = new { @class = "form-control", @id = "numb", MaxLength = "40"} })
+                       
+                    </div>
+                </div>
+
+                <div class="form-group">
+                   
+                    @Html.LabelFor(model => model.GSTINProvisionalID,"GSTINProvisional ID", htmlAttributes: new { @class = "control-label col-md-5", @id = "lname" })
+                    @Html.ValidationMessageFor(model => model.GSTINProvisionalID, "*", new { @class = "text-danger" })
+                     <div class="col-md-10" id="disfromlabel">
+                        @Html.EditorFor(model => model.GSTINProvisionalID, new { htmlAttributes = new { @class = "form-control", @id = "alpha", MaxLength = "16" } })
+                        
+                    </div>
+                </div>
+
+                <div class="form-group">
+                   
+                    @Html.LabelFor(model => model.GSTINDocument,"GSTIN Document", htmlAttributes: new { @class = "control-label col-md-4", @id = "lname" })
+                    @Html.ValidationMessageFor(model => model.GSTINDocument, "*", new { @class = "text-danger" })
+                    <div class="col-md-10" id="disfromlabel">
+                        @Html.TextBox("file", "", new { type = "file" }) 
+
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    
+                    @Html.LabelFor(model => model.TANNumber,"TAN Number", htmlAttributes: new { @class = "control-label col-md-4", @id = "lname" })
+                    @Html.ValidationMessageFor(model => model.TANNumber, "*", new { @class = "text-danger" })
+                    <div class="col-md-10" id="disfromlabel">
+                        @Html.EditorFor(model => model.TANNumber, new { htmlAttributes = new { @class = "form-control",@id = "alpha1", MaxLength = "16" } })
+                       
+                    </div>
+                </div>
+
+                <div class="form-group">
+                   
+                    @Html.LabelFor(model => model.TANDocument,"TAN Document", htmlAttributes: new { @class = "control-label col-md-4", @id = "lname" })
+                    @Html.ValidationMessageFor(model => model.TANDocument, "*", new { @class = "text-danger" })
+                    <div class="col-md-10" id="disfromlabel">
+                        @Html.TextBox("file1", "", new { type = "file" })
+                       
+                    </div>
+                </div>
+
+                <div class="form-group">
+                   
+                    @Html.LabelFor(model => model.CIN, "CIN Number", htmlAttributes: new { @class = "control-label col-md-4", @id = "lname" })
+                    @Html.ValidationMessageFor(model => model.CIN, "*", new { @class = "text-danger" })
+                    <div class="col-md-10" id="disfromlabel">
+                        @Html.EditorFor(model => model.CIN, new { htmlAttributes = new { @class = "form-control",@id = "alpha2", MaxLength = "16" } })
+                        
+                    </div>
+                </div>
+                   
+                    <div class="form-group">
+                        @Html.LabelFor(model => model.CINDocument, "CIN Document", htmlAttributes: new { @class = "control-label col-md-4", @id = "lname" })
+                        @Html.ValidationMessageFor(model => model.CINDocument, "*", new { @class = "text-danger" })
+                        <div class="col-md-10" id="disfromlabel">
+                            @Html.TextBox("file2", "", new { type = "file" })
+                            
+                        </div>
+                    </div>
+
+                <div class="form-group">
+                    @Html.LabelFor(model => model.RegisteredBusineesAddress,"Business Address", htmlAttributes: new { @class = "control-label col-md-5", @id = "lname" })
+                   @Html.ValidationMessageFor(model => model.RegisteredBusineesAddress, "*", new { @class = "text-danger" })
+                     <div class="col-md-10" id="disfromlabel">
+                        @Html.TextAreaFor(model => model.RegisteredBusineesAddress, new { htmlAttributes = new { @class = "form-control", MaxLengthAttributeAdapter = "50" } })
+
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <div class="col-md-offset-2 col-md-10">
+                        <input type="submit" value="Save and next" class="btn btn-default" />
+                    </div>
+                </div>
+            </div>
+        }
+    </div>
+</body>
+</html>
+
+<link href="http://ajax.googleapis.com/ajax/libs/jqueryui/1.8/themes/cupertino/jquery-ui.css" type="text/css" rel="Stylesheet" />
+<script src="http://ajax.googleapis.com/ajax/libs/jquery/1.4/jquery.min.js" type="text/javascript"></script>
+<script src="http://ajax.googleapis.com/ajax/libs/jqueryui/1.8/jquery-ui.min.js" type="text/javascript"></script>
+<script>
+//For not accepting numeric values
+               $( document ).ready(function() {
+                   $("#numb").keypress(function (e) {
+                       var key = e.which;
+                       if (key >= 48 && key <= 57) {
+                           e.preventDefault();
+                       }
+                   });
+
+                   $("#alpha").keydown(function (e) {
+                       var key = e.which;
+                       if (key >= 65 && key <= 90) {
+                           e.preventDefault();
+                       }
+                   });
+
+                   $("#alpha1").keydown(function (e) {
+                       var key = e.which;
+                       if (key >= 65 && key <= 90) {
+                           e.preventDefault();
+                       }
+                   });
+
+                   $("#alpha2").keydown(function (e) {
+                       var key = e.which;
+                       if (key >= 65 && key <= 90) {
+                           e.preventDefault();
+                       }
+                   });
+               });
+</script>
+
+
+
+@section Scripts {
+    @Scripts.Render("~/bundles/jqueryval")
+}

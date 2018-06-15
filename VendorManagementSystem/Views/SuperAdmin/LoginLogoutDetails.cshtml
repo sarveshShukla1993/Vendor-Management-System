@@ -1,0 +1,242 @@
+﻿@model IPagedList<VendorManagementSystem.Models.VendorLogInOutTime>
+@using PagedList
+@using PagedList.Mvc
+
+@{
+    ViewBag.Title = "LoginLogoutDetails";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<html>
+<head>
+    <style>
+        table, th, td {
+            border: 1px solid black;
+            border-collapse: collapse;
+        }
+
+        th, td {
+            padding: 5px;
+            text-align: left;
+        }
+
+        #tblid {
+            margin-top: 0px;
+        }
+
+        #bdyid {
+            margin-top: 10px;
+        }
+
+        #abc {
+        }
+
+        #lstid {
+            margin-left: 105px;
+            color: white;
+            background-color: darkslategray;
+            margin-top: 50px;
+        }
+
+        h2 {
+            color: maroon;
+        }
+
+        #addid {
+            margin-left: 750px;
+            color: white;
+            background-color: darkslategray;
+            margin-top: 50px;
+        }
+          #ddd{
+            margin-left:830px;
+        }
+    </style>
+</head>
+<body id="bdyid">
+
+    <ol class="breadcrumb">
+        <li>@Html.ActionLink("AdminHome", "AdminPortal", "SuperAdmin", routeValues: null, htmlAttributes: new { id = "registerLink" })</li>
+        <li class="active">LoginLogoutDetails</li>
+    </ol>
+
+    <table id="ddd">
+        <tr>
+            <td>
+                @using (Html.BeginForm("Export", "VendorAccess", FormMethod.Post))
+                {
+                    <input type="hidden" name="GridHtml" />
+                    <input type="submit" id="btnSubmit" value="ExportPDF" />
+                }
+            </td>
+            <td>
+                @using (Html.BeginForm("ExportToWordLL", "SuperAdmin", FormMethod.Post))
+                {
+                    <input type="hidden" name="GridHtml" />
+                    <input type="submit" id="btnESubmit" value="ExportWord" />
+                }
+            </td>
+            <td>
+                @using (Html.BeginForm("ExportExcelLL", "SuperAdmin", FormMethod.Post))
+                {
+                    <input type="hidden" name="GridHtml" />
+                    <input type="submit" id="btnESubmit" value="ExportExcel" />
+                }
+            </td>
+        </tr>
+    </table>
+
+
+    @using (Html.BeginForm("LoginLogoutDetails", "SuperAdmin", FormMethod.Get))
+    {
+        @Html.AntiForgeryToken()
+        <div>
+            <div>
+                <label id="b">Search Vendor's Details: </label> <input type="text" name="search" id="textAcomplete" placeholder="Enter Vendor Id" />  <span id="ab"></span>
+                <input type="hidden" id="listid" name="ListId" />
+                 <input type="submit" value="Search" />
+            </div>
+            <table>
+                <tr>
+                    <td>
+                        @Html.ActionLink("Refresh", "LoginLogoutDetails")
+                    </td>
+                </tr>
+            </table>
+        </div>
+    }
+    <div id="docx">
+        <div class="WordSection1">
+            <div id="Grid">
+                <table id="tblid" style="width:100%">
+                    <caption><h2>Login Logout Details:</h2></caption>
+                    <tr>
+                        <th>
+                            @Html.DisplayNameFor(model => model.First().VendorId)
+                        </th>
+                        <th>
+                            @Html.DisplayNameFor(model => model.First().LogInTime)
+                        </th>
+                        <th>
+                            @Html.DisplayNameFor(model => model.First().LogOutTime)
+                        </th>
+                        <th>
+                            @Html.DisplayNameFor(model => model.First().totolTime)
+                        </th>
+                        <th></th>
+                    </tr>
+
+                    @foreach (var item in Model)
+                    {
+                        <tr>
+                            <td>
+                                @Html.DisplayFor(modelItem => item.VendorId)
+                            </td>
+                            <td>
+                                @Html.DisplayFor(modelItem => item.LogInTime)
+                            </td>
+                            <td>
+                                @Html.DisplayFor(modelItem => item.LogOutTime)
+                            </td>
+                            <td>
+                                @Html.DisplayFor(modelItem => item.totolTime)
+                            </td>
+                            <td>
+                                @Html.ActionLink("Details", "IndivisualvendorDetail", new { vid = item.VendorId })
+                            </td>
+                        </tr>
+                    }
+                    @Html.PagedListPager(Model, page => Url.Action("LoginLogoutDetails", new { page, search = Request.QueryString["search"] }))
+                </table>
+            </div>
+        </div>
+    </div>
+</body>
+</html>
+
+<link href="http://ajax.googleapis.com/ajax/libs/jqueryui/1.8/themes/cupertino/jquery-ui.css" type="text/css" rel="Stylesheet" />
+<script src="http://ajax.googleapis.com/ajax/libs/jquery/1.4/jquery.min.js" type="text/javascript"></script>
+<script src="http://ajax.googleapis.com/ajax/libs/jqueryui/1.8/jquery-ui.min.js" type="text/javascript"></script>
+
+@*AutoComplete ajax code*@
+<script type="text/javascript">
+    $("#textAcomplete").autocomplete({
+                source: function (request, response) {
+                    $.ajax({
+                        url: '@Url.Action("SearchRecords")',
+                        dataType: "json",
+                        data: { term: $("#textAcomplete").val() },
+                        success: function (data) {
+                            response($.map(data, function (item) {
+                                return { label: item, value: item };
+                            }))
+                        },
+                      })
+                     },
+                  });
+</script>
+
+
+@*//Exporting PDF File*@
+<script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.8.3/jquery.min.js"></script>
+<script type="text/javascript">
+        $(function () {
+            $("#btnSubmit").click(function () {
+                $("input[name='GridHtml']").val($("#Grid").html());
+            });
+        });
+</script>
+
+
+@*Exporting Doc File*@
+
+<script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.8.3/jquery.min.js"></script>
+<script type="text/javascript">
+        window.export.onclick = function () {
+
+            if (!window.Blob) {
+                alert('Your legacy browser does not support this action.');
+                return;
+            }
+
+            var html, link, blob, url, css;
+
+            // EU A4 use: size: 841.95pt 595.35pt;
+            // US Letter use: size:11.0in 8.5in;
+
+            css = (
+              '<style>' +
+              'page WordSection1{size: 841.95pt 595.35pt;mso-page-orientation: landscape;}' +
+              'div.WordSection1 {page: WordSection1;}' +
+              'table{border-collapse:collapse;}td{border:1px gray solid;width:5em;padding:2px;}' +
+              '</style>'
+            );
+
+            html = window.docx.innerHTML;
+            blob = new Blob(['\ufeff', css + html], {
+                type: 'application/msword'
+            });
+            url = URL.createObjectURL(blob);
+            link = document.createElement('A');
+            link.href = url;
+            // Set default file name.
+            // Word will append file extension - do not add an extension here.
+            link.download = 'Document';
+            document.body.appendChild(link);
+            if (navigator.msSaveOrOpenBlob) navigator.msSaveOrOpenBlob(blob, 'Document.doc'); // IE10-11
+            else link.click();  // other browsers
+            document.body.removeChild(link);
+        };
+</script>
+
+
+@*//Exporting Excel File*@
+
+<script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.8.3/jquery.min.js"></script>
+<script type="text/javascript">
+        $(function () {
+            $("#btnESubmit").click(function () {
+                $("input[name='GridHtml']").val($("#Grid").html());
+            });
+        });
+</script>

@@ -1,0 +1,157 @@
+﻿
+@{
+    ViewBag.Title = "AdminPortal";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<html>
+    <head>
+        <style>
+            table, th, td {
+                border: 1px solid black;
+                border-collapse: collapse;
+            }
+
+            th, td {
+                padding: 5px;
+                text-align: left;
+            }
+
+            #tblid {
+                margin-top: 0px;
+            }
+
+            #bdyid {
+                margin-top: 10px;
+            }
+
+            #abc {
+            }
+
+            #lstid {
+                margin-left: 105px;
+                color: white;
+                background-color: darkslategray;
+                margin-top: 50px;
+            }
+
+            h2 {
+                color: maroon;
+            }
+
+            #addid {
+                margin-left: 750px;
+                color: white;
+                background-color: darkslategray;
+                margin-top: 50px;
+            }
+            h2{
+                margin-left:470px;
+            }
+            #so{
+                margin-left:950px;
+
+            }
+            .modal-dialog{
+            overflow-y: initial !important
+        }
+        .modal-body{
+            height: 250px;
+            overflow-y: auto;
+        }
+        </style>
+    </head>
+    <body  id="bdyid">
+
+        <ol class="breadcrumb">
+            <li class="active">AdminHome</li>
+        </ol>
+
+        <div id="so">
+            <a href="#" class="btn btn-default" onclick="ChatRoom()" id="offer">Chat Room</a>
+        </div>
+
+        <table id="tblid" style="width:100%">
+            <caption><h2>Admin Portal </h2></caption>
+
+            <tr>
+                <th>
+                    @Html.ActionLink("Vendor List", "VendorList", "SuperAdmin", new { @id = "vndrlst" })
+                </th>
+                <th>
+                    @Html.ActionLink("Product List", "ProductList", "SuperAdmin", new { @id = "prdctlst" })
+                </th>
+            </tr>
+               
+            <tr>
+                <th>
+                    @Html.ActionLink("Visitor List", "VisitorList", "SuperAdmin", new { @id = "vstrlst" })
+                </th>
+                <th>
+                    @Html.ActionLink("Purpose List", "AddpurposeOfVisit", "SuperAdmin")
+                </th>
+            </tr>
+
+            <tr>
+                <th>
+                    @Html.ActionLink("Selling Category List", "AddSellingCategory", "SuperAdmin")
+                </th>
+                <th>
+                    @Html.ActionLink("Vendor's Login Details", "LoginLogoutDetails", "SuperAdmin")
+                </th>
+            </tr>
+            
+            <tr>
+                <th>
+                    @Html.ActionLink("Send Order to vendor", "ProductOrder", "SuperAdmin")
+                </th>
+                <th>
+                    @Html.ActionLink("Track Orders", "OrderRecievedByVenodor", "SuperAdmin")
+                </th>
+            </tr>
+
+            @if (ViewBag.messg != null)
+            {
+                <h2> Welcome @ViewBag.messg </h2>
+            }
+
+            </table>
+
+</body>
+</html>
+
+@*Modal for Chat room*@
+<div class="modal fade" id="myModal">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <a href="#" class="close" data-dismiss="modal">&times;</a>
+                <h4 class="modal-title">Chat Room</h4>
+            </div>
+            <form id="form">
+                <div class="modal-body">
+                    <div>
+                            <input type="text" id="chatmsg" />
+                            <input type="submit" id="btn" value="send" />
+                        </div>
+                    <div id="welcome-messages"></div>
+
+                    @section scripts {
+                        <script src="~/Scripts/jquery.signalR-2.2.3.min.js"></script>
+                        <script src="~/signalr/js"></script>
+                        <script src="~/Scripts/SignalR.js"></script>
+                    }
+                </div>
+                <div class="modal-footer">
+                    <a href="#" class="btn btn-default" data-dismiss="modal">Close</a>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+<script>
+    var ChatRoom = function () {
+        $("#myModal").modal('show');
+    }
+</script>

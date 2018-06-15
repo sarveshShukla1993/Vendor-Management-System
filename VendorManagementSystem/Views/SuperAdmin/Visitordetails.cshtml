@@ -1,0 +1,92 @@
+﻿@model VendorManagementSystem.Models.Visitor
+
+@{
+    ViewBag.Title = "Visitordetails";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+
+
+<html>
+    <head>
+        <style>
+            table {
+                font-family: arial, sans-serif;
+                border-collapse: collapse;
+                width: 100%;
+            }
+
+            h2 {
+                margin-left: 460px;
+                color: maroon;
+            }
+
+            td, th {
+                border: 1px solid #dddddd;
+                text-align: left;
+                padding: 8px;
+            }
+
+            tr:nth-child(even) {
+                background-color: #dddddd;
+            }
+            #abcd{
+                color:red;
+                background-color:bisque;
+            }
+        </style>
+    </head>
+    <body>
+
+        <ol class="breadcrumb">
+            <li>@Html.ActionLink("AdminHome", "AdminPortal", "SuperAdmin", routeValues: null, htmlAttributes: new { id = "registerLink"})</li>
+            <li>@Html.ActionLink("VisitorList", "VisitorList", "SuperAdmin", routeValues: null, htmlAttributes: new { id = "registerLink" })</li>
+            <li class="active">Visitordetails</li>
+        </ol>
+
+        <h2>Visitor Details</h2>
+            @*<table>
+                <tr id="abcd">
+                    <td>
+                        @Html.ActionLink("Back to List", "VisitorList")
+                    </td>
+                </tr>
+            </table>*@
+        <table>
+            <tr>
+               <th>@Html.DisplayNameFor(model => model.Name)</th>
+                <td>@Html.DisplayFor(model => model.Name) </td>
+                <th>@Html.DisplayNameFor(model => model.Email)</th>
+                <td>@Html.DisplayFor(model => model.Email)</td>
+            </tr>
+
+            <tr>
+                <th>@Html.DisplayNameFor(model => model.Purpose)</th>
+                <td>@Html.DisplayFor(model => model.Purpose) </td>
+                <th>@Html.DisplayNameFor(model => model.ContactPerson)</th>
+                <td>@Html.DisplayFor(model => model.ContactPerson)</td>
+            </tr>
+
+            <tr>
+                <th>@Html.DisplayNameFor(model => model.Age)</th>
+                <td>@Html.DisplayFor(model => model.Age)</td>
+            </tr>
+
+            <tr>
+                <th>@Html.DisplayNameFor(model => model.MeetingDate)</th>
+                <td>@Html.DisplayFor(model => model.MeetingDate) </td>
+                <th>@Html.DisplayNameFor(model => model.MeetingTime)</th>
+                <td>@Html.DisplayFor(model => model.MeetingTime)</td>
+            </tr>
+
+            <tr>
+                <th>@Html.DisplayNameFor(model => model.AddressLine)</th>
+                <td>@Html.DisplayFor(model => model.AddressLine) </td>
+                <th><label>Visit Count</label></th>
+                <td>@Html.DisplayFor(model => model.Count) </td>
+            </tr>
+
+        </table>
+    </body>
+</html>
+

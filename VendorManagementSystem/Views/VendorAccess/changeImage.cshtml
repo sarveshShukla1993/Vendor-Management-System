@@ -1,0 +1,95 @@
+﻿@model VendorManagementSystem.Models.UploadProduct
+
+@{
+    ViewBag.Title = "changeImage";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<html>
+    <head>
+        <style>
+            #bdymrg{
+                margin-left:100px;
+            }
+            h3{
+                margin-left:360px;
+                color:maroon;
+            }
+            #abc{
+                margin-left:360px;
+            }
+            table {
+            font-family: arial, sans-serif;
+            border-collapse: collapse;
+            width: 100%;
+        }
+             td, th {
+            border: 1px solid #dddddd;
+            text-align: left;
+            padding: 8px;
+        }
+
+        tr:nth-child(even) {
+            background-color: #dddddd;
+        }
+        </style>
+    </head>
+    <body>
+        <ol class="breadcrumb">
+            <li>@Html.ActionLink("Home", "Index", "VendorAccess")</li>
+            <li>@Html.ActionLink("productList", "VendorList", "VendorAccess")</li>
+            <li> <a href="/VendorAccess/ProductDetails/@Model.ProductId">ProductDetails</a> </li>
+            <li class="active">ChangeImage</li>
+        </ol>
+        @using (Html.BeginForm("changeImage", "VendorAccess", FormMethod.Post, new { enctype = "multipart/form-data" }))
+        {
+            @Html.AntiForgeryToken()
+
+            <div id="bdymrg">
+                <h3>Change Image</h3>
+                @Html.HiddenFor(model => model.ProductId)
+                @Html.HiddenFor(model => model.VendorId)
+                @Html.HiddenFor(model => model.ProductName)
+                @Html.HiddenFor(model => model.ProductPrice)
+                @Html.HiddenFor(model => model.ProductQuantity)
+                @Html.HiddenFor(model => model.ProductDescription)
+                @Html.HiddenFor(model => model.SellingCategory)
+                @Html.HiddenFor(model => model.IsDeleted)
+                @Html.HiddenFor(model => model.TimeOfDeletion)
+                @Html.HiddenFor(model => model.OrderApproved)
+                @Html.HiddenFor(model => model.OrderRecieved)
+                @Html.HiddenFor(model => model.OrderDelivered)
+
+                <table>
+                    <tr>
+                        <td> @Html.LabelFor(model => model.ProductImage) </td>
+                        @if (ViewBag.pict != null)
+                        {
+                            string str = ViewBag.pict;
+                            string[] strArr = null;
+                            char splitchar = ',';
+                            strArr = str.Split(splitchar);
+                            for (int i = 0; i < strArr.Count(); i++)
+                            {
+                                <td><img src="~/ProductImage/@strArr[i]" style="width:220px;height:170px; margin-left:0px; margin-top:23px;" /> </td>
+                            }
+                            @*<td> <img src="~/ProductImage/@ViewBag.pict" style="width:220px;height:170px; margin-left:0px; margin-top:23px;" /> </td>*@
+                        }
+                        else
+                        {
+                            <td> <img src="~/images/defImage.jpg" style="width:150px;height:150px; margin-left:0px; margin-top:23px;" /> </td>
+
+                        }
+                        <td>@Html.TextBox("file", "", new { type = "file", @multiple = "multiple" })</td>
+                    </tr>
+                </table>
+
+                    <div id="abc">
+                        <input type="submit" value="Change" class="btn btn-success" />
+                        @Html.ActionLink("Cancel", "changeImage") 
+                    </div>
+                </div>
+        }
+    </body>
+</html>
+

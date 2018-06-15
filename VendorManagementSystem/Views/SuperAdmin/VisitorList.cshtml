@@ -1,0 +1,287 @@
+﻿@model IPagedList<VendorManagementSystem.Models.Visitor>
+@using VendorManagementSystem.Models
+
+@using PagedList
+@using PagedList.Mvc
+@{
+    ViewBag.Title = "VisitorList";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+
+<html>
+<head>
+    <style>
+        table, th, td {
+            border: 1px solid black;
+            border-collapse: collapse;
+        }
+
+        th, td {
+            padding: 5px;
+            text-align: left;
+        }
+
+        #tblid {
+            margin-top: 0px;
+        }
+
+        #bdyid {
+            margin-top: 10px;
+        }
+
+        #abc {
+        }
+
+        #lstid {
+            margin-left: 105px;
+            color: white;
+            background-color: darkslategray;
+            margin-top: 50px;
+        }
+
+        h2 {
+            color: maroon;
+        }
+
+        #addid {
+            margin-left: 750px;
+            color: white;
+            background-color: darkslategray;
+            margin-top: 50px;
+        }
+
+        #ddd {
+            margin-left: 800px;
+        }
+    </style>
+</head>
+<body id="bdyid">
+
+    <ol class="breadcrumb">
+        <li><a href="AdminPortal">AdminHome</a></li>
+        <li class="active">VisitorList</li>
+    </ol>
+    <table id="ddd">
+        <tr>
+            <td>
+              @*@Html.ActionLink("PDF", "Reports", new { ReportType = "PDF" })*@
+                @using (Html.BeginForm("Export", "VendorAccess", FormMethod.Post))
+                {
+                    <input type="hidden" name="GridHtml" />
+                    <input type="submit" id="btnSubmit" value="ExportPDF" />
+                }
+            </td>
+            <td>
+               @using (Html.BeginForm("ExportToWordVL", "SuperAdmin", FormMethod.Post))
+               {
+                <input type="hidden" name="GridHtml" />
+                <input type="submit" id="btnESubmit" value="ExportWord" />
+               }
+            </td>
+            <td>
+                @using (Html.BeginForm("ExportExcelVL", "SuperAdmin", FormMethod.Post))
+                {
+                    <input type="hidden" name="GridHtml" />
+                    <input type="submit" id="btnESubmit" value="ExportExcel" />
+                }
+            </td>
+        </tr>
+    </table>
+
+   @using (Html.BeginForm("VisitorList", "SuperAdmin", FormMethod.Get))
+   {
+    @Html.AntiForgeryToken()
+    <div>
+        <div>
+            <label>SEARCH RECORD: </label>
+            <br />
+            From Date: <input type="date" name="searchFrom" placeholder="Enter From Date" /> To Date: <input type="date" name="searchTo" placeholder="Enter To Date" /> <input type="submit" value="Search" />
+        </div>
+            <table>
+                <tr>
+                    <td>
+                        @Html.ActionLink("Refresh", "VisitorList")
+                    </td>
+                </tr>
+            </table>
+    </div>
+   }
+
+    <div id="docx">
+        <div class="WordSection1">
+            <div id="Grid">
+                <table id="tblid" style="width:100%">
+                    <caption><h2>List Of Visitors</h2></caption>
+                    <tr>
+                        <th>
+                            @Html.DisplayNameFor(model => model.First().Name)
+                        </th>
+                        <th>
+                            @Html.DisplayNameFor(model => model.First().Purpose)
+                        </th>
+                        <th>
+                            @Html.DisplayNameFor(model => model.First().ContactPerson)
+                        </th>
+                        <th>
+                            @Html.DisplayNameFor(model => model.First().MeetingDate)
+                        </th>
+                        <th>
+                            <label>Visit Count</label>
+                        </th>
+                        <th></th>
+                    </tr>
+
+                    @foreach (var item in Model)
+                    {
+                        <tr id="row_@item.Id">
+                            <td>
+                                @Html.DisplayFor(modelItem => item.Name)
+                            </td>
+                            <td>
+                                @Html.DisplayFor(modelItem => item.Purpose)
+                            </td>
+                            <td>
+                                @Html.DisplayFor(modelItem => item.ContactPerson)
+                            </td>
+                            <td>
+                                @Html.DisplayFor(modelItem => item.MeetingDate)
+                            </td>
+                            <td>
+                                @Html.DisplayFor(modelItem => item.Count)
+                            </td>
+                            <td>
+                                @Html.ActionLink("Details", "Visitordetails", new { id = item.Id}) |
+                                <a href="#" class="btn btn-danger" onclick="ConfirmDelete(@item.Id)">Delete</a>
+                             </td>
+                        </tr>
+                    }
+                    @Html.PagedListPager(Model, page => Url.Action("VisitorList", new { page, searchFrom = Request.QueryString["searchFrom"],
+                                                                                              searchTo  = Request.QueryString["searchTo"] }))
+                </table>
+                <input type="hidden" id="hiddenvisitorId" />
+            </div>
+        </div>
+    </div>
+
+
+</body>
+</html>
+
+
+@*Popup modal for deleting visitor records.*@
+<div class="modal fade" id="myModal">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <a href="#" class="close" data-dismiss="modal">&times;</a>
+                <h4 class="modal-title">Delete Visitor</h4>
+            </div>
+            <div class="modal-body">
+                <h4>Are you sure to delete this record?</h4>
+                <form id="form">
+
+                </form>
+            </div>
+
+
+            <div class="modal-footer">
+                <a href="#" class="btn btn-success" onclick="DeleteVisitor()" id="DeleteVisitorRecord" data-dismiss="modal">Delete</a>
+                <a href="#" class="btn btn-default" data-dismiss="modal">Cancel</a>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<script>
+    var ConfirmDelete = function (VisitorId) {
+        $("#hiddenvisitorId").val(VisitorId);
+        $("#myModal").modal('show');
+    }
+
+    var DeleteVisitor = function () {
+
+        $("#loaderDiv").show();
+
+        var visId = $("#hiddenvisitorId").val();
+
+        $.ajax({
+            type: "POST",
+            url: "/SuperAdmin/visitorDelete",
+            data: { VisitorId: visId},
+            success: function(result){
+                $("#loaderDiv").hide();
+                $("#myModal").hide();
+                $("#row_" + visId).remove();
+            }
+
+        })
+    }
+</script>
+
+
+@*Exporting Doc File*@
+<script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.8.3/jquery.min.js"></script>
+<script type="text/javascript">
+    window.export.onclick = function () {
+
+        if (!window.Blob) {
+            alert('Your legacy browser does not support this action.');
+            return;
+        }
+
+        var html, link, blob, url, css;
+
+        // EU A4 use: size: 841.95pt 595.35pt;
+        // US Letter use: size:11.0in 8.5in;
+
+        css = (
+          '<style>' +
+          'page WordSection1{size: 841.95pt 595.35pt;mso-page-orientation: landscape;}' +
+          'div.WordSection1 {page: WordSection1;}' +
+          'table{border-collapse:collapse;}td{border:1px gray solid;width:5em;padding:2px;}' +
+          '</style>'
+        );
+
+        html = window.docx.innerHTML;
+        blob = new Blob(['\ufeff', css + html], {
+            type: 'application/msword'
+        });
+        url = URL.createObjectURL(blob);
+        link = document.createElement('A');
+        link.href = url;
+        // Set default file name.
+        // Word will append file extension - do not add an extension here.
+        link.download = 'Document';
+        document.body.appendChild(link);
+        if (navigator.msSaveOrOpenBlob) navigator.msSaveOrOpenBlob(blob, 'Document.doc'); // IE10-11
+        else link.click();  // other browsers
+        document.body.removeChild(link);
+    };
+</script>
+
+
+@*//Exporting PDF File*@
+<script type="text/javascript">
+    $(function () {
+        $("#btnSubmit").click(function () {
+            $("input[name='GridHtml']").val($("#Grid").html());
+        });
+    });
+</script>
+
+
+<script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.8.3/jquery.min.js"></script>
+<script type="text/javascript">
+    $(function () {
+        $("#btnESubmit").click(function () {
+            $("input[name='GridHtml']").val($("#Grid").html());
+        });
+    });
+</script>

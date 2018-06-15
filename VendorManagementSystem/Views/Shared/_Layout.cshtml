@@ -1,0 +1,312 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>@ViewBag.Title - VMS Application</title>
+    @Styles.Render("~/Content/css")
+    @Scripts.Render("~/bundles/modernizr")
+    @*it will display icon in tab bar*@
+    <link rel="shortcut icon" href="~/icons/tabIcon.ico">
+    <style>
+        body{
+             background-image:url("../images/whiteback.jpg");
+        }
+        #headr{
+            background-color:darkblue;
+        }
+        #dt{
+            background-color:white;
+        }
+        #email{
+            color:white;
+            margin-top:14px;
+        }
+    </style>
+</head>
+<body>
+    <div class="navbar navbar-inverse navbar-fixed-top"  id="headr">
+        <div class="container">
+            <div class="navbar-header">
+                @*it will display icon on header*@
+                <a class="navbar-brand">
+                    <img src="~/icons/vms_icon1.ico" alt="Site Logo" style="height:25px; width: 25px" />
+                    <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
+                        <span class="icon-bar"></span>
+                        <span class="icon-bar"></span>
+                        <span class="icon-bar"></span>
+                    </button>
+                </a>
+
+              @if (User.Identity.Name == "vmsadmin@gmail.com")
+              {
+                @Html.ActionLink("Vendor Management System", "AdminPortal", "SuperAdmin", new { @class = "navbar-brand" })
+              }
+              else if (User.Identity.Name == "")
+              {
+                @Html.ActionLink("Vendor Management System", "HomePage", "registeLogin", new { @class = "navbar-brand" })
+              }
+              else
+              {
+                @Html.ActionLink("Vendor Management System", "Index", "VendorAccess", new { @class = "navbar-brand" })
+              }
+
+            </div>
+            @Html.Partial("_LoginPartial")
+     </div>
+       @if (User.Identity.Name == "vmsadmin@gmail.com")
+       {
+        <ul class="nav navbar-nav navbar-right">
+            @*/*Notification bell form product upload*/*@
+            <span class="notiA glyphicon glyphicon-eye-open"><span class="countA">&nbsp;</span> </span>
+            <div class="noti-contentA">
+                <div class="noti-top-arrowA"></div>
+                <ul id="notiContentA"></ul>
+            </div>
+            @*/*Notification eye for vendor added*/*@
+            <span class="noti glyphicon glyphicon-bell"><span class="count">&nbsp;</span></span>
+            <div class="noti-content">
+                <div class="noti-top-arrow"></div>
+                <ul id="notiContent"></ul>
+            </div>
+        </ul>
+       }
+</div>
+    <div class="container body-content">
+        @RenderBody()
+        <hr />
+        <footer>
+            <p align="left">&copy; @DateTime.Now.Year - Welcome To Vendor Management System</p>
+        </footer>
+    </div>
+    @Scripts.Render("~/bundles/jquery")
+    @Scripts.Render("~/bundles/bootstrap")
+    @RenderSection("scripts", required: false)
+
+    <script src="~/Scripts/jquery.signalR-2.2.3.min.js"></script>
+    <script src="~/signalr/js"></script>
+    <script src="~/Scripts/SignalR.js"></script>
+    <style type="text/css">
+        .noti-content{
+            position:fixed;
+            right:320px;
+            background:#e5e5e5;
+            border-radius:4px;
+            top:27px;
+            width:250px;
+            display:none;
+            border:1px solid #9E958B;
+
+        }
+        ul#notiContent{
+            max-height:200px;
+            overflow:auto;
+            padding:0px;
+            margin:0px;
+            padding-left:20px;
+        }
+        .noti-top-arrow{
+            border-color:transparent;
+            border-bottom-color:#F5DE83;
+            border-style:dashed dashed solid;
+            border-width:0 8.5px 8.5px;
+            position:absolute;
+            right:32px;
+            top:-8px;
+        }
+        span.noti{
+            color:#FF2323;
+            margin:15px;
+            position:fixed;
+            right:400px;
+            font-size:18px;
+            cursor:pointer;
+        }
+        span.count{
+            position:relative;
+            top:-3px;
+        }
+        
+        /*Notification bell style form product upload*/
+        .noti-contentA{
+            position:fixed;
+            right:270px;
+            background:#e5e5e5;
+            border-radius:4px;
+            top:27px;
+            width:250px;
+            display:none;
+            border:1px solid #9E958B;
+
+        }
+        ul#notiContentA{
+            max-height:200px;
+            overflow:auto;
+            padding:0px;
+            margin:0px;
+            padding-left:20px;
+        }
+        .noti-top-arrowA{
+            border-color:transparent;
+            border-bottom-color:#F5DE83;
+            border-style:dashed dashed solid;
+            border-width:0 8.5px 8.5px;
+            position:absolute;
+            right:32px;
+            top:-8px;
+        }
+        span.notiA{
+            color:whitesmoke;
+            margin:15px;
+            position:fixed;
+            right:350px;
+            font-size:18px;
+            cursor:pointer;
+        }
+        span.countA{
+            position:relative;
+            top:-3px;
+        }
+    </style>
+    <script type="text/javascript">
+        $(function () {
+            //click on notification icon to show the notifications
+            $('span.noti').click(function (e) {
+                e.stopPropagation();
+                $('.noti-content').show();
+                var count = 0;
+                count = parseInt($('span.count').html()) || 1;
+                //only load notification when not already loaded
+                if(count > 0)
+                {
+                    updateNotification();
+                }
+                $('span.count', this).html('&nbsp;');
+            })
+
+            //hide notifications
+            $('html').click(function () {
+                $('.noti-content').hide();
+            })
+
+            //update notification
+            function updateNotification()
+            {
+                $('#notiContent').empty();
+                $('#notiContent').append($('<li>loading...</li>'));
+
+                $.ajax({
+                    type: "GET",
+                    url: '@Url.Action("getVendorNotification", "SuperAdmin")',
+                    success: function (response) {
+                        $('#notiContent').empty();
+                        if(response.length == 0)
+                        {
+                            $('#notiContent').append($('<li>No New Vendor.</li>'));
+                        }
+                        $.each(response, function (index, value) {
+                            updateNotificationCount();
+                            $('#notiContent').append($('<li>New Vendor: '+value.AccountHoderName +' ('+value.VendorId + ')added </li>'))
+                        });
+                    },
+                    error: function (error) {
+                        console.log(error);
+                    }
+                })
+            }
+
+            //update count
+            function updateNotificationCount() {
+                var count = 0;
+                count = parseInt($('span.count').html()) || 0;
+                count++;
+                $('span.count').html(count);
+            }
+
+            //signalR js code for start hub and send receive notification
+            var notificationHub = $.connection.notificationHub;
+            $.connection.hub.start()
+                .done(function () {
+                console.log('notification hub started');
+            });
+
+            //signalr method for push server notification to client
+            notificationHub.client.notify = function (message) {
+                if (message && message.toLowerCase() == "added") {
+                    updateNotificationCount();
+                }
+            }
+        })
+    </script>
+    @*Code to implement notification for product*@
+    <script type="text/javascript">
+        $(function () {
+            //click on notification icon to show the notifications
+            $('span.notiA').click(function (e) {
+                e.stopPropagation();
+                $('.noti-contentA').show();
+                var count = 0;
+                count = parseInt($('span.countA').html()) || 1;
+                //only load notification when not already loaded
+                if(count > 0)
+                {
+                    updateNotificationA();
+                }
+                $('span.countA', this).html('&nbsp;');
+            })
+
+            //hide notifications
+            $('html').click(function () {
+                $('.noti-contentA').hide();
+            })
+
+            //update notification
+            function updateNotificationA()
+            {
+                $('#notiContentA').empty();
+                $('#notiContentA').append($('<li>loading...</li>'));
+
+                $.ajax({
+                    type: "GET",
+                    url: '@Url.Action("getProductNotification", "SuperAdmin")',
+                    success: function (response) {
+                        $('#notiContentA').empty();
+                        if(response.length == 0)
+                        {
+                            $('#notiContentA').append($('<li>No New Product.</li>'));
+                        }
+                        $.each(response, function (index, value) {
+                            $('#notiContentA').append($('<li>New Product: ' + value.ProductName + ' (' + value.SellingCategory + ')added </li>'))
+                        });
+                    },
+                    error: function (error) {
+                        console.log(error);
+                    }
+                })
+            }
+
+            //update count
+            function updateNotificationCountA() {
+                var count = 0;
+                count = parseInt($('span.countA').html()) || 0;
+                count++;
+                $('span.countA').html(count);
+            }
+
+            //signalR js code for start hub and send receive notification
+            var notificationHub = $.connection.notificationHub;
+            $.connection.hub.start()
+                .done(function () {
+                    console.log('notification hub started');
+            });
+
+            //signalr method to push server notification to client
+            notificationHub.client.notify = function (message) {
+                if (message && message.toLowerCase() == "added") {
+                    updateNotificationCountA();
+                }
+            }
+        })
+    </script>
+</body>
+</html>

@@ -1,0 +1,135 @@
+﻿@model VendorManagementSystem.Models.VendorModel
+@using VendorManagementSystem.Models
+@{
+    ViewBag.Title = "VendorDetailEdit";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<html>
+<head>
+    <style>
+        table {
+            font-family: arial, sans-serif;
+            border-collapse: collapse;
+            width: 100%;
+        }
+
+        #btn {
+            margin-left: 300px;
+            margin-top: 10px;
+        }
+
+        h2 {
+            margin-left: 460px;
+            color: maroon;
+        }
+
+        td, th {
+            border: 1px solid #dddddd;
+            text-align: left;
+            padding: 8px;
+        }
+
+        tr:nth-child(even) {
+            background-color: #dddddd;
+        }
+    </style>
+</head>
+<body>
+
+    <ol class="breadcrumb">
+        <li>@Html.ActionLink("VendorHome", "Index", "VendorAccess", routeValues: null, htmlAttributes: new { id = "registerLink" })</li>
+        <li class="active">Personal Record</li>
+    </ol>
+
+    <h2>Edit Record</h2>
+    @using (Html.BeginForm())
+    {
+        @Html.AntiForgeryToken()
+        @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+        @Html.HiddenFor(model => model.VendorId)
+        @Html.HiddenFor(model => model.VendorEmail)
+        @Html.HiddenFor(model => model.VendorPassword)
+        <table>
+            <tr>
+                <th> @Html.LabelFor(model => model.VendorName) </th>
+                <td> @Html.EditorFor(model => model.VendorName) </td>
+                <th>@Html.LabelFor(model => model.VendorContact) </th>
+                <td> @Html.EditorFor(model => model.VendorContact) </td>
+            </tr>
+            <tr>
+                <th> @Html.LabelFor(model => model.SellingCategory) </th>
+                <td>
+                @if (ViewBag.sellingcat != null)
+                {
+                    List<SellingCategoryModel> b = new List<SellingCategoryModel>();
+                    b = ViewBag.sellingcat;
+                    string str = null;
+
+                    if (ViewBag.checkeditem != null)
+                    {
+                        str = ViewBag.checkeditem;
+                        int z = b.Count();
+                        string[] strArr = new string[z];
+                        strArr = null;
+                        char splitchar = ',';
+                        strArr = str.Split(splitchar);
+                        int k = 0;
+                        for (int i = 0; i < b.Count; i++)
+                        {
+                            if (strArr.Length > k)
+                            {
+                                if (b[i].hobbyname == strArr[k])
+                                {
+                                    @Html.CheckBox("hobby[" + i + "].IsChecked", new { @checked = true })
+                                    @b[i].hobbyname
+                                    @Html.Hidden("hobby[" + i + "].Id", b[i].Id)
+                                    @Html.Hidden("hobby[" + i + "].hobbyname", b[i].hobbyname)
+                                    <br />
+                                    k++;
+                                }
+                                else
+                                {
+                                   @Html.CheckBox("hobby[" + i + "].IsChecked", b[i].IsChecked)
+                                   @b[i].hobbyname
+                                   @Html.Hidden("hobby[" + i + "].Id", b[i].Id)
+                                   @Html.Hidden("hobby[" + i + "].hobbyname", b[i].hobbyname)
+                                    <br />
+                                }
+                            }
+                            else
+                            {
+                                @Html.CheckBox("hobby[" + i + "].IsChecked", b[i].IsChecked)
+                                @b[i].hobbyname
+                                @Html.Hidden("hobby[" + i + "].Id", b[i].Id)
+                                @Html.Hidden("hobby[" + i + "].hobbyname", b[i].hobbyname)
+                                <br />
+                            }
+                        }
+                    }
+                    else
+                    {
+                        for (int j = 0; j < b.Count; j++)
+                        {
+                          @Html.CheckBox("hobby[" + j + "].IsChecked", b[j].IsChecked)
+                          @b[j].hobbyname
+                          @Html.Hidden("hobby[" + j + "].Id", b[j].Id)
+                          @Html.Hidden("hobby[" + j + "].hobbyname", b[j].hobbyname)
+                          <br />
+                        }
+                    }
+                 }
+                </td>
+            </tr>
+        </table>
+
+
+        <div class="form-group">
+            <div class="col-md-offset-2 col-md-10">
+                <input type="submit" value="Save" id="btn" class="btn btn-default" />
+            </div>
+        </div>
+
+    }
+    </body>
+</html>

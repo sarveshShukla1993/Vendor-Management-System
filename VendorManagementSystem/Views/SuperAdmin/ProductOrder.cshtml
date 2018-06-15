@@ -1,0 +1,139 @@
+﻿@model IEnumerable<VendorManagementSystem.Models.UploadProduct>
+
+@{
+    ViewBag.Title = "ProductOrder";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<html>
+    <head>
+        <script src="~/Scripts/jquery-3.3.1.min.js"></script>
+        <style>
+            table, th, td {
+                border: 1px solid black;
+                border-collapse: collapse;
+            }
+
+            h2{
+                margin-left:450px;
+            }
+            th, td {
+                padding: 5px;
+                text-align: left;
+            }
+
+            #tblid {
+                margin-top: 0px;
+            }
+
+            #bdyid {
+                margin-top: 10px;
+            }
+
+            #abc {
+            }
+
+            #lstid {
+                margin-left: 105px;
+                color: white;
+                background-color: darkslategray;
+                margin-top: 50px;
+            }
+
+            h2 {
+                color: maroon;
+            }
+
+            #addid {
+                margin-left: 750px;
+                color: white;
+                background-color: darkslategray;
+                margin-top: 50px;
+            }
+
+            #ddd {
+                margin-left: 900px;
+            }
+        </style>
+    </head>
+    <body>
+        <ol class="breadcrumb">
+            <li>@Html.ActionLink("AdminHome", "AdminPortal", "SuperAdmin", routeValues: null, htmlAttributes: new { id = "registerLink" })</li>
+            <li class="active">Product Order</li>
+        </ol>
+        <h2>List Of Orders</h2>
+
+@using (Html.BeginForm("sendMultOrders", "SuperAdmin", FormMethod.Post))
+{
+    using (Html.BeginForm("ProductOrder", "SuperAdmin", FormMethod.Post))
+      {
+        <input type="submit" value="Send selected orders" />
+
+        <table id="tblid" style="width:100%">
+            <tr>
+                <th>
+                    <input type="checkbox" id="checkAll" />
+                    <label>Select All</label>
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.ProductName)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.ProductPrice)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.ProductDescription)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.SellingCategory)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.ProductImage)
+                </th>
+                <th></th>
+            </tr>
+
+            @foreach (var item in Model)
+            {
+                <tr>
+                    <td>
+                        <input type="checkbox" class="checkBox" value="@item.ProductId" name="ckboxId" />
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.ProductName)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.ProductPrice)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.ProductDescription)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.SellingCategory)
+                    </td>
+                    <td>
+                        <img src="~/ProductImage/@item.ProductImage" style="width:80px;height:80px; margin-left:0px; margin-top:0px;" />
+                    </td>
+                    <td>
+                        @Html.ActionLink("Send order", "SendOrderToVendor", new { prodId = item.ProductId, vendId = item.VendorId })
+                    </td>
+                </tr>
+            }
+
+        </table>
+    }
+}
+    </body>
+</html>
+
+@*Implementation of select all orders*@
+<script>
+    $(document).ready(function () {
+
+        $("#checkAll").click(function () {
+            $(".checkBox").prop('checked', 
+                $(this).prop('checked'));
+        });
+    });
+</script>
+

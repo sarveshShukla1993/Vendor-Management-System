@@ -1,0 +1,348 @@
+﻿@model VendorManagementSystem.Models.ProductListProductUploadMethod
+@using PagedList
+@using PagedList.Mvc
+@using VendorManagementSystem.ProjectViewModel
+@{
+    ViewBag.Title = "VendorList";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+
+
+<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+
+<div id="modal-container" class="modal fade" tabindex="-1" role="dialog">
+    <div class="modal-content"> </div>
+</div>
+
+<script type="text/javascript">
+        $(function () {
+            // Initialize numeric spinner input boxes
+            //$(".numeric-spinner").spinedit();
+            // Initialize modal dialog
+            // attach modal-container bootstrap attributes to links with .modal-link class.
+            // when a link is clicked with these attributes, bootstrap will display the href content in a modal dialog.
+            $('body').on('click', '.modal-link', function (e) {
+                e.preventDefault();
+                $(this).attr('data-target', '#modal-container');
+                $(this).attr('data-toggle', 'modal');
+            });
+            // Attach listener to .modal-close-btn's so that when the button is pressed the modal dialog disappears
+            $('body').on('click', '.modal-close-btn', function () {
+                $('#modal-container').modal('hide');
+            });
+            //clear modal cache, so that new content can be loaded
+            $('#modal-container').on('hidden.bs.modal', function () {
+                $(this).removeData('bs.modal');
+            });
+            $('#CancelModal').on('click', function () {
+                return false;
+            });
+        });
+</script>
+<html>
+<head>
+    <style>
+        .modal-dialog {
+          width: 450px;
+          height:1800px;
+        }
+        h2{
+            color:maroon;
+        }
+        #p{
+            margin-left:880px;
+            margin-top:5px;
+        }
+         #ddd{
+            margin-left:830px;
+        }
+     .modal-content {
+         width: 600px !important;
+         margin: 30px auto !important;
+     }
+    </style>
+</head>
+<body>
+    <ol class="breadcrumb">
+        <li>@Html.ActionLink("VendorHome", "Index", "VendorAccess", routeValues: null, htmlAttributes: new { id = "registerLink" })</li>
+        <li class="active">ProductList</li>
+    </ol>
+    <h2>Your Uploaded Product</h2>
+    <table id="ddd">
+        <tr>
+            <td>
+                @using (Html.BeginForm("Export", "VendorAccess", FormMethod.Post))
+                {
+                    <input type="hidden" name="GridHtml" />
+                    <input type="submit" id="btnSubmit" value="ExportPDF" />
+                }
+            </td>
+            <td>
+                @using (Html.BeginForm("ExportToWordVA", "VendorAccess", FormMethod.Post))
+                {
+                    <input type="hidden" name="GridHtml" />
+                    <input type="submit" id="btnESubmit" value="ExportWord" />
+                }
+            </td>
+            <td>
+                @using (Html.BeginForm("ExportExcelVA", "VendorAccess", FormMethod.Post))
+                {
+                    <input type="hidden" name="GridHtml" />
+                    <input type="submit" id="btnESubmit" value="ExportToExcel" />
+                }
+            </td>
+        </tr>
+    </table>
+    <table id="p">
+        <tr>
+            <td>
+                @Html.ActionLink("+", "AddProduct", "VendorAccess", null, new { @class = "modal-link btn btn-success" }) || 
+            </td>
+            <td>
+                @Html.ActionLink("Add New Product", "ProductUploadMethod") 
+            </td>
+        </tr>
+    </table>
+    @using (Html.BeginForm("VendorList", "VendorAccess", FormMethod.Get))
+    {
+        @Html.AntiForgeryToken()
+        <div class="ui-widget">
+            <label id="b">Search Product: </label> <input type="text" name="search" id="txtcomplete" placeholder="Product Name/Selling Category" /> <span id="ab"></span>
+            <input type="submit" value="Search" />
+            <table>
+                <tr>
+                    <td>
+                        @Html.ActionLink("Refresh", "VendorList")
+                    </td>
+                </tr>
+            </table>
+            @ViewBag.message
+        </div>
+    }
+    <div id="docx">
+        <div class="WordSection1">
+            <div id="Grid">
+                <table class="table">
+                    <caption><h3>List of Products</h3></caption>
+                    <tr>
+                        <th>
+                            @Html.DisplayNameFor(model => model.uploadproduct.First().ProductId)
+                        </th>
+                        <th>
+                            @Html.DisplayNameFor(model => model.uploadproduct.First().ProductName)
+                        </th>
+                        <th>
+                            @Html.DisplayNameFor(model => model.uploadproduct.First().SellingCategory)
+                        </th>
+                        <th>
+                            @Html.DisplayNameFor(model => model.uploadproduct.First().ProductPrice)
+                        </th>
+                        <th>
+                            @Html.DisplayNameFor(model => model.uploadproduct.First().ProductQuantity)
+                        </th>
+                        <th>
+                            @Html.DisplayNameFor(model => model.uploadproduct.First().ProductDescription)
+                        </th>
+                        @*<th>
+                         @Html.DisplayNameFor(model => model.uploadproduct.First().ProductImage)
+                        </th>*@
+
+                        <th></th>
+                    </tr>
+
+                    @foreach (var item in Model.uploadproduct)
+                    {
+                        <tr>
+                            <td>
+                                @Html.DisplayFor(modelItem => item.ProductId)
+                            </td>
+                            <td>
+                                @Html.DisplayFor(modelItem => item.ProductName)
+                            </td>
+                            <td>
+                                @Html.DisplayFor(modelItem => item.SellingCategory)
+                            </td>
+                            <td>
+                                @Html.DisplayFor(modelItem => item.ProductPrice)
+                            </td>
+                            <td>
+                                @Html.DisplayFor(modelItem => item.ProductQuantity)
+                            </td>
+                            <td>
+                                @Html.DisplayFor(modelItem => item.ProductDescription)
+                            </td>
+                            @*<td>
+                                <img src="~/ProductImage/@item.ProductImage" style="width:100px;height:100px; margin-left:0px; margin-top:0px;"/>
+                            </td>*@
+                            <td>
+                                | @Html.ActionLink("Edit", "EditRecord", new { id = item.ProductId }) |
+                                @Html.ActionLink("Details", "ProductDetails", new { id = item.ProductId }) |
+                            </td>
+                        </tr>
+                    }
+                    @Html.PagedListPager(Model.uploadproduct, page => Url.Action("VendorList", new { page, search = Request.QueryString["search"] }))
+                </table>
+            </div>
+        </div>
+        </div>
+</body>
+</html>
+
+<link href="http://ajax.googleapis.com/ajax/libs/jqueryui/1.8/themes/cupertino/jquery-ui.css" type="text/css" rel="Stylesheet" />
+<script src="http://ajax.googleapis.com/ajax/libs/jquery/1.4/jquery.min.js" type="text/javascript"></script>
+<script src="http://ajax.googleapis.com/ajax/libs/jqueryui/1.8/jquery-ui.min.js" type="text/javascript"></script>
+
+@*AutoComplete ajax code*@
+<script type="text/javascript">
+    $("#txtcomplete").autocomplete({
+                source: function (request, response) {
+                    $.ajax({
+                        url: '@Url.Action("GetRecords")',
+                        dataType: "json",
+                        data: { term: $("#txtcomplete").val() },
+                        success: function (data) {
+                            response($.map(data, function (item) {
+                                return { label: item, value: item };
+                            }))
+                        },
+                      })
+                     },
+                  });
+</script>
+
+@*Adding data to database using bootstrap modal*@
+<script>
+    var saveForm = function () {
+        var Upload = new FormData($("#UploadFile")[0]);
+        var myformdata = $("#form").serialize();
+        $.ajax({
+            type: "POST",
+            url: "/VendorAccess/uploadThroughModal",
+            data: myformdata,
+            success: function (data) {
+                alert("Product has been uploaded.");
+                $("#myModal").modal("hide");
+                location.reload();
+            }
+        })
+    }
+</script>
+
+@*//Exporting PDF File*@
+<script type="text/javascript">
+        $(function () {
+            $("#btnSubmit").click(function () {
+                $("input[name='GridHtml']").val($("#Grid").html());
+            });
+        });
+</script>
+
+
+@*Exporting Doc File*@
+<script type="text/javascript">
+        window.export.onclick = function () {
+
+            if (!window.Blob) {
+                alert('Your legacy browser does not support this action.');
+                return;
+            }
+
+            var html, link, blob, url, css;
+
+            // EU A4 use: size: 841.95pt 595.35pt;
+            // US Letter use: size:11.0in 8.5in;
+
+            css = (
+              '<style>' +
+              'page WordSection1{size: 841.95pt 595.35pt;mso-page-orientation: landscape;}' +
+              'div.WordSection1 {page: WordSection1;}' +
+              'table{border-collapse:collapse;}td{border:1px gray solid;width:5em;padding:2px;}' +
+              '</style>'
+            );
+
+            html = window.docx.innerHTML;
+            blob = new Blob(['\ufeff', css + html], {
+                type: 'application/msword'
+            });
+            url = URL.createObjectURL(blob);
+            link = document.createElement('A');
+            link.href = url;
+            // Set default file name.
+            // Word will append file extension - do not add an extension here.
+            link.download = 'Document';
+            document.body.appendChild(link);
+            if (navigator.msSaveOrOpenBlob) navigator.msSaveOrOpenBlob(blob, 'Document.doc'); // IE10-11
+            else link.click();  // other browsers
+            document.body.removeChild(link);
+        };
+</script>
+
+
+@*//Exporting Excel File*@
+<script type="text/javascript">
+        $(function () {
+            $("#btnESubmit").click(function () {
+                $("input[name='GridHtml']").val($("#Grid").html());
+            });
+        });
+</script>
+
+
+@*Popup modal for Adding Product.*@
+@*<div class="modal fade" id="myModal">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <a href="#" class="close" data-dismiss="modal">&times;</a>
+                    <h4 class="modal-title">Add Product</h4>
+                </div>
+                <form id="form">
+                    <div class="modal-body">
+                        <fieldset id="SubmitForm">
+                            @using (Html.BeginForm("uploadThroughModal", "VendorAccess", FormMethod.Post, new { enctype = "multipart/form-data" }))
+                            {
+                                @Html.AntiForgeryToken()
+                                @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+                                @Html.LabelFor(model => model.upload.ProductName, "Product Name", htmlAttributes: new { @class = "control-label col-md-4", @id = "lname" })
+                                @Html.EditorFor(model => model.upload.ProductName, new { htmlAttributes = new { @class = "form-control", MaxLength = "30" } })
+                                @Html.ValidationMessageFor(model => model.upload.ProductName, "", new { @class = "text-danger" })
+                                @Html.LabelFor(model => model.upload.ProductPrice, "Product Price", htmlAttributes: new { @class = "control-label col-md-4" })
+                                @Html.EditorFor(model => model.upload.ProductPrice, new { htmlAttributes = new { @class = "form-control", MaxLength = "12" } })
+                                @Html.ValidationMessageFor(model => model.upload.ProductPrice, "", new { @class = "text-danger" })
+                                @Html.LabelFor(model => model.upload.ProductQuantity, "Product Quantity", htmlAttributes: new { @class = "control-label col-md-5" })
+                                @Html.EditorFor(model => model.upload.ProductQuantity, new { htmlAttributes = new { @class = "form-control" } })
+                                @Html.ValidationMessageFor(model => model.upload.ProductQuantity, "", new { @class = "text-danger" })
+                                @Html.LabelFor(model => model.upload.ProductDescription, "Description", htmlAttributes: new { @class = "control-label col-md-4" })
+                                @Html.EditorFor(model => model.upload.ProductDescription, new { htmlAttributes = new { @class = "form-control", MaxLength = "40" } })
+                                @Html.ValidationMessageFor(model => model.upload.ProductDescription, "", new { @class = "text-danger" })
+                                @Html.LabelFor(model => model.upload.ProductImage, "Product Image", htmlAttributes: new { @class = "control-label col-md-4" })
+                                @Html.TextBoxFor(model => model.upload.ProductImage, new { type = "file", name = "Upload", @class = "form-control", @id = "Upload" })
+                                <input type="file" id="UploadFile" name="Upload" class="form-control" />
+                                @Html.ValidationMessageFor(model => model.upload.ProductImage, "", new { @class = "text-danger" })
+                                @Html.LabelFor(model => model.upload.SellingCategory, "Selling Category", htmlAttributes: new { @class = "control-label col-md-5" })
+                                @Html.DropDownListFor(model => model.upload.SellingCategory, new SelectList(Enum.GetValues(typeof(Sellingcategory))), "--Select Category--", new { @class = "form-control" })
+                                @Html.ValidationMessageFor(model => model.upload.SellingCategory, "", new { @class = "text-danger" })
+                                <div class="modal-footer">
+                                    <a href="#" class="btn btn-success" onclick="saveForm()" data-dismiss="modal">Submit</a>
+                                    <a href="#" class="btn btn-default" data-dismiss="modal">Cancel</a>
+                                </div>
+                            }
+                        </fieldset>
+                    </div>
+                </form>
+            </div>
+           </div>
+         </div>
+
+
+    <script>
+        var ConfirmDelete = function () {
+            $("#myModal").modal('show');
+        }
+    </script>*@

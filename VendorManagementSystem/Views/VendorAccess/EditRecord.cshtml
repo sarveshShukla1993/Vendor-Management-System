@@ -1,0 +1,89 @@
+﻿@model VendorManagementSystem.Models.UploadProduct
+@using VendorManagementSystem.ProjectViewModel
+
+@{
+    ViewBag.Title = "EditRecord";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<html>
+<head>
+    <style>
+        table {
+            font-family: arial, sans-serif;
+            border-collapse: collapse;
+            width: 100%;
+        }
+
+        #btn{
+            margin-left:300px;
+            margin-top:10px;
+        }
+        h2 {
+            margin-left: 460px;
+            color: maroon;
+        }
+
+        td, th {
+            border: 1px solid #dddddd;
+            text-align: left;
+            padding: 8px;
+        }
+
+        tr:nth-child(even) {
+            background-color: #dddddd;
+        }
+    </style>
+</head>
+
+<body>
+    <ol class="breadcrumb">
+        <li>@Html.ActionLink("Home", "Index", "VendorAccess")</li>
+        <li>@Html.ActionLink("ProductList", "VendorList")</li>
+        <li class="active">ChangeImage</li>
+    </ol>
+    <h2>Edit Record</h2>
+
+@using (Html.BeginForm())
+{
+    @Html.AntiForgeryToken()
+    @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+    @Html.HiddenFor(model => model.ProductId)
+    <table>
+        <tr>
+            <th> @Html.LabelFor(model => model.ProductName) </th>
+            <td> @Html.EditorFor(model => model.ProductName) </td >
+            <th>@Html.LabelFor(model => model.ProductPrice) </th>
+            <td> @Html.EditorFor(model => model.ProductPrice) </td>
+        </tr>
+        <tr>
+            <th> @Html.LabelFor(model => model.ProductQuantity) </th>
+            <td> @Html.EditorFor(model => model.ProductQuantity) </td>
+            <th>@Html.LabelFor(model => model.ProductDescription)</th>
+            <td> @Html.EditorFor(model => model.ProductDescription)  </td>
+        </tr>
+        <tr>
+            <th> @Html.LabelFor(model => model.SellingCategory) </th>
+            <td>@Html.DropDownListFor(model => model.SellingCategory, new SelectList(Enum.GetValues(typeof(Sellingcategory))), "--Select Product Category--") </td>
+        </tr>
+
+    </table>
+    
+
+    <div class="form-group">
+        <div class="col-md-offset-2 col-md-10">
+            <input type="submit" value="Save" id="btn" class="btn btn-default" />
+        </div>
+    </div>
+
+}
+    <p>
+        @Html.ActionLink("Back to List", "VendorList")
+    </p>
+</body>
+</html>
+
+
+@section Scripts {
+    @Scripts.Render("~/bundles/jqueryval")
+}

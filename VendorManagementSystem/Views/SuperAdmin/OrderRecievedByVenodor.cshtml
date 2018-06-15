@@ -1,0 +1,150 @@
+﻿@model IEnumerable<VendorManagementSystem.Models.UploadProduct>
+
+@{
+    ViewBag.Title = "OrderRecievedByVenodor";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<html>
+<head>
+    <style>
+        table, th, td {
+            border: 1px solid black;
+            border-collapse: collapse;
+        }
+
+        th, td {
+            padding: 5px;
+            text-align: left;
+        }
+
+        #tblid {
+            margin-top: 0px;
+        }
+
+        #bdyid {
+            margin-top: 10px;
+        }
+
+        #abc {
+        }
+
+        #lstid {
+            margin-left: 105px;
+            color: white;
+            background-color: darkslategray;
+            margin-top: 50px;
+        }
+
+        h2 {
+            color: maroon;
+            margin-left: 470px;
+        }
+
+        #addid {
+            margin-left: 750px;
+            color: white;
+            background-color: darkslategray;
+            margin-top: 50px;
+        }
+
+        #ddd {
+            margin-left: 900px;
+        }
+    </style>
+</head>
+<body>
+    <ol class="breadcrumb">
+        <li>@Html.ActionLink("AdminHome", "AdminPortal", "SuperAdmin", routeValues: null, htmlAttributes: new { id = "registerLink" })</li>
+        <li class="active">OrderTracking</li>
+    </ol>
+    <h2> Track Orders </h2>
+
+    <table id="tblid" style="width:100%">
+        <tr>
+            <th>
+                @Html.DisplayNameFor(model => model.ProductName)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.ProductPrice)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.ProductDescription)
+            </th>
+            @*<th>
+                    @Html.DisplayNameFor(model => model.VendorId)
+                </th>*@
+            <th>
+                @Html.DisplayNameFor(model => model.SellingCategory)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.ProductImage)
+            </th>
+            @*<th>
+                    @Html.DisplayNameFor(model => model.IsDeleted)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.TimeOfDeletion)
+                </th>*@
+            <th>
+                @Html.DisplayNameFor(model => model.OrderApproved)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.OrderRecieved)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.OrderDelivered)
+            </th>
+            @*<th></th>*@
+        </tr>
+
+        @foreach (var item in Model)
+        {
+            <tr>
+                <td>
+                    @Html.DisplayFor(modelItem => item.ProductName)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.ProductPrice)
+                </td>
+                @*<td>
+                        @Html.DisplayFor(modelItem => item.ProductQuantity)
+                    </td>*@
+                <td>
+                    @Html.DisplayFor(modelItem => item.ProductDescription)
+                </td>
+                @*<td>
+                        @Html.DisplayFor(modelItem => item.VendorId)
+                    </td>*@
+                <td>
+                    @Html.DisplayFor(modelItem => item.SellingCategory)
+                </td>
+                <td>
+                    <img src="~/ProductImage/@item.ProductImage" style="width:80px;height:80px; margin-left:0px; margin-top:0px;" />
+                </td>
+                @*<td>
+                        @Html.DisplayFor(modelItem => item.IsDeleted)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.TimeOfDeletion)
+                    </td>*@
+                <td>
+                    @Html.DisplayFor(modelItem => item.OrderApproved)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.OrderRecieved)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.OrderDelivered)
+                </td>
+                @*<td>
+                        @Html.ActionLink("Edit", "Edit", new { id=item.ProductId }) |
+                        @Html.ActionLink("Details", "Details", new { id=item.ProductId }) |
+                        @Html.ActionLink("Delete", "Delete", new { id=item.ProductId })
+                    </td>*@
+            </tr>
+        }
+
+    </table>
+    </body>
+</html>

@@ -1,0 +1,277 @@
+﻿@*@model IEnumerable<VendorManagementSystem.ProjectViewModel.VendorAccessDetails>*@
+@model VendorManagementSystem.ProjectViewModel.VendorAccessDetails
+@using VendorManagementSystem.ProjectViewModel
+@{
+    ViewBag.Title = "Index";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+<html>
+<head>
+    <style>
+        table, th, td {
+            border: 1px solid black;
+            border-collapse: collapse;
+        }
+
+        th, td {
+            padding: 5px;
+            text-align: left;
+        }
+        #tblid{
+            margin-top:0px;
+        }
+        #bdyid{
+            margin-top:10px;
+        }
+        #tbl1{
+            margin-top:30px;
+            color:dimgrey;  
+        }
+        #ddd{
+            margin-left:800px;
+        }
+        #norder{
+            background-color:lightblue;
+        }
+        #chatbtn{
+            margin-left:800px;
+        }
+        .modal-dialog{
+            overflow-y: initial !important
+        }
+        .modal-body{
+            height: 250px;
+            overflow-y: auto;
+        }
+    </style>
+</head>
+<body id="bdyid">
+    <ol class="breadcrumb">
+        <li class="active">VendorHome</li>
+    </ol>
+    
+    <table id="ddd">
+        <tr>
+            <td>
+                @using (Html.BeginForm("Export", "VendorAccess", FormMethod.Post))
+                {
+                    <input type="hidden" name="GridHtml" />
+                    <input type="submit" id="btnSubmit" value="ExportPDF" />
+                }
+            </td>
+            <td>
+               @using (Html.BeginForm("ExportToWord", "VendorAccess", FormMethod.Post))
+               {
+                <input type="hidden" name="GridHtml" />
+                    <input type="submit" id="btnESubmit" value="ExportWord" />
+               }
+            </td>
+            <td>
+                @using (Html.BeginForm("ExportExcel", "VendorAccess", FormMethod.Post))
+                {
+                    <input type="hidden" name="GridHtml" />
+                    <input type="submit" id="btnESubmit" value="ExportToExcel" />
+                }
+            </td>
+        </tr>
+    </table>
+   
+    <table>
+        <tr id="norder">
+            <td>
+                @Html.ActionLink("Orders", "recievedOrder", "VendorAccess")
+            </td>
+            <td>
+                <a href="#" class="btn btn-default" onclick="chatStart()" id="abc">Chat Room</a>
+            </td>
+        </tr>
+    </table>
+    
+
+    <table id="tbl1">
+        <tr>
+            <td>
+                @Html.ActionLink("Show Product", "VendorList", "VendorAccess", new { @id = "lstid" })
+            </td>
+            <td>
+                @Html.ActionLink("Add Product", "ProductUploadMethod", "VendorAccess", new { @id = "addid" })
+            </td>
+            <td>
+                @Html.ActionLink("Edit Record", "VendorDetailEdit", new { id =  Model.Id})
+            </td>
+        </tr>
+    </table>
+
+
+    <div id="docx">
+        <div class="WordSection1">
+            <div id="Grid">
+                <table id="tblid" style="width:100%">
+                    <caption><h3>Personal Details</h3></caption>
+                    <tr>
+                        <th>
+                            @Html.DisplayNameFor(model => model.Name)
+                        </th>
+
+                        <td>
+                            @Html.DisplayFor(modelItem => modelItem.Name)
+                        </td>
+                    </tr>
+                    <tr>
+                        <th>
+                            @Html.DisplayNameFor(model => model.Email)
+                        </th>
+
+                        <td>
+                            @Html.DisplayFor(modelItem => modelItem.Email)
+                        </td>
+                    </tr>
+                    <tr>
+                        <th>
+                            @Html.DisplayNameFor(model => model.Contact)
+                        </th>
+                        <td>
+                            @Html.DisplayFor(modelItem => modelItem.Contact)
+                        </td>
+                    </tr>
+                    <tr>
+                        <th>
+                            @Html.DisplayNameFor(model => model.Gender)
+                        </th>
+                        <td>
+                            @Html.DisplayFor(modelItem => modelItem.Gender)
+                        </td>
+
+                    </tr>
+                    <tr>
+                        <th>
+                            @Html.DisplayNameFor(model => model.Age)
+                        </th>
+                        <td>
+                            @Html.DisplayFor(modelItem => modelItem.Age)
+                        </td>
+                    </tr>
+                    <tr>
+                        <th>
+                            @Html.DisplayNameFor(model => model.Company)
+                        </th>
+                        <td>
+                            @Html.DisplayFor(modelItem => modelItem.Company)
+                        </td>
+                    </tr>
+                    <tr>
+                        <th>
+                            @Html.DisplayNameFor(model => model.Sell)
+                        </th>
+                        <td>
+                            @Html.DisplayFor(modelItem => modelItem.Sell)
+                        </td>
+                    </tr>
+                </table>
+            </div>
+        </div>
+    </div>
+
+  
+</body>
+</html>
+
+@*Popup modal for Adding Purpose.*@
+<div class="modal fade" id="myModal">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <a href="#" class="close" data-dismiss="modal">&times;</a>
+                <h4 class="modal-title">Chat Room</h4>
+            </div>
+            <form id="form">
+                <div class="modal-body">
+                    <div>
+                        <input type="text" id="chatmsg" />
+                        <input type="submit" id="btn" value="send" />
+                    </div>
+                    <div id="welcome-messages"></div>
+
+                    @section scripts {
+                        <script src="~/Scripts/jquery.signalR-2.2.3.min.js"></script>
+                        <script src="~/signalr/js"></script>
+                        <script src="~/Scripts/SignalR.js"></script>
+                    }
+                </div>
+                <div class="modal-footer">
+                    <a href="#" class="btn btn-default" data-dismiss="modal">Close</a>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+<script>
+    var chatStart = function () {
+        $("#myModal").modal('show');
+    }
+</script>
+
+@*//Exporting PDF File*@
+<script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.8.3/jquery.min.js"></script>
+<script type="text/javascript">
+        $(function () {
+            $("#btnSubmit").click(function () {
+                $("input[name='GridHtml']").val($("#Grid").html());
+            });
+        });
+</script>
+
+
+@*Exporting Doc File*@
+<script type="text/javascript">
+    window.exportDoc.onclick = function () {
+            if (!window.Blob) {
+                alert('Your legacy browser does not support this action.');
+                return;
+            }
+
+            var html, link, blob, url, css;
+
+            // EU A4 use: size: 841.95pt 595.35pt;
+            // US Letter use: size:11.0in 8.5in;
+
+            css = (
+              '<style>' +
+              'page WordSection1{size: 841.95pt 595.35pt;mso-page-orientation: landscape;}' +
+              'div.WordSection1 {page: WordSection1;}' +
+              'table{border-collapse:collapse;}td{border:1px gray solid;width:5em;padding:2px;}' +
+              '</style>'
+            );
+
+            html = window.docx.innerHTML;
+            blob = new Blob(['\ufeff', css + html], {
+                type: 'application/msword'
+            });
+            url = URL.createObjectURL(blob);
+            link = document.createElement('A');
+            link.href = url;
+            // Set default file name.
+            // Word will append file extension - do not add an extension here.
+            link.download = 'Document';
+            document.body.appendChild(link);
+            if (navigator.msSaveOrOpenBlob) navigator.msSaveOrOpenBlob(blob, 'Document.doc'); // IE10-11
+            else link.click();  // other browsers
+            document.body.removeChild(link);
+        };
+</script>
+
+
+@*//Exporting Excel File*@
+<script type="text/javascript">
+        $(function () {
+            $("#btnESubmit").click(function () {
+                $("input[name='GridHtml']").val($("#Grid").html());
+            });
+        });
+</script>

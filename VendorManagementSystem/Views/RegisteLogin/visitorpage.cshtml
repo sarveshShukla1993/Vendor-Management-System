@@ -1,0 +1,154 @@
+﻿@model VendorManagementSystem.Models.Visitor
+
+@{
+    ViewBag.Title = "visitorpage";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+
+<html>
+<head>
+    <style>
+        table {
+            font-family: arial, sans-serif;
+            border-collapse: collapse;
+            width: 100%;
+        }
+
+        h2 {
+            margin-left: 460px;
+            color: maroon;
+        }
+
+        td, th {
+            border: 1px solid #dddddd;
+            text-align: left;
+            padding: 8px;
+        }
+
+        tr:nth-child(even) {
+            background-color: #dddddd;
+        }
+        h4{
+            margin-left:850px;
+            margin-top:20px;
+        }
+    </style>
+</head>
+<body>
+    <ol class="breadcrumb">
+        <li><a href="HomePage">VMSHome</a></li>
+        <li><a href="visitorList">Registration</a></li>
+        <li class="active">ConfirmPage</li>
+    </ol>
+    <h4>
+       | @Html.ActionLink("Save Record", "SaveRecord") |
+        <a href="#" class="btn btn-success" onclick="ConfirmEdit()" id="ab">Edit</a>
+    </h4>
+    <h3>Are you sure all fields are correct?</h3>
+    <table>
+        <tr>
+            <th>@Html.DisplayNameFor(model => model.Name)</th>
+            <td>@Html.DisplayFor(model => model.Name) </td>
+            <th>@Html.DisplayNameFor(model => model.Email)</th>
+            <td>@Html.DisplayFor(model => model.Email)</td>
+        </tr>
+
+        <tr>
+            <th>@Html.DisplayNameFor(model => model.Age)</th>
+            <td>@Html.DisplayFor(model => model.Age)</td>
+            <th>@Html.DisplayNameFor(model => model.Purpose)</th>
+            <td>@Html.DisplayFor(model => model.Purpose)</td>
+        </tr>
+
+        <tr>
+            <th>@Html.DisplayNameFor(model => model.ContactPerson)</th>
+            <td>@Html.DisplayFor(model => model.ContactPerson)</td>
+            <th>@Html.DisplayNameFor(model => model.MeetingDate)</th>
+            <td> @Html.DisplayFor(model => model.MeetingDate)</td>
+        </tr>
+
+        <tr>
+            <th>@Html.DisplayNameFor(model => model.MeetingTime)</th>
+            <td>@Html.DisplayFor(model => model.MeetingTime)</td>
+            <th>@Html.DisplayNameFor(model => model.AddressLine)</th>
+            <td>@Html.DisplayFor(model => model.AddressLine)</td>
+        </tr>
+    </table>
+    <input type="hidden" id="hiddenProductId" />
+</body>
+</html>
+
+@*Popup modal for Editing Purpose.*@
+<div class="modal fade" id="myEditModal1">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <a href="#" class="close" data-dismiss="modal">&times;</a>
+                <h4 class="modal-title">Edit Record</h4>
+            </div>
+            <form id="form">
+                <div class="modal-body">
+                    <table>
+                        @Html.HiddenFor(model => model.Id)
+                        <tr>
+                            <th> @Html.LabelFor(model => model.Name) </th>
+                            <td> @Html.EditorFor(model => model.Name, new { @id = "name"}) </td>
+                            <th>@Html.LabelFor(model => model.Email) </th>
+                            <td> @Html.EditorFor(model => model.Email, new { @id = "email" }) </td>
+                        </tr>
+                        <tr>
+                            <th> @Html.LabelFor(model => model.Age) </th>
+                            <td> @Html.EditorFor(model => model.Age, new { @id = "age" }) </td>
+                            <th>@Html.LabelFor(model => model.Purpose)</th>
+                            <td>@Html.EditorFor(model => model.Purpose)</td>
+                            @*<td> @Html.DropDownListFor(model => model.Purpose, new SelectList(ViewBag.visitlist, "PurposeId", "Purpose", "IsDeleted"), Model.Purpose)  </td>*@
+                        </tr>
+                        <tr>
+                            <th> @Html.LabelFor(model => model.ContactPerson) </th>
+                            <td> @Html.EditorFor(model => model.ContactPerson, new { @id = "contact" }) </td>
+                            <th>@Html.LabelFor(model => model.AddressLine,"Address")</th>
+                            <td> @Html.EditorFor(model => model.AddressLine, new { @id = "address" })  </td>
+                        </tr>
+
+                        <tr>
+                            @*<th> @Html.LabelFor(model => model.MeetingDate) </th>*@
+                            <td> @Html.HiddenFor(model => model.MeetingDate, "{0:yyyy-MM-dd}") </td>
+                            <th>@*@Html.LabelFor(model => model.MeetingTime)*@</th>
+                            <td> @Html.HiddenFor(model => model.MeetingTime)  </td>
+                        </tr>
+                    </table>
+                </div>
+                <div class="modal-footer">
+                    <a href="#" class="btn btn-success" onclick="saveRecord()" id="EditP" data-dismiss="modal">Submit</a>
+                    <a href="#" class="btn btn-default" data-dismiss="modal">Cancel</a>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+<script>
+ var ConfirmEdit = function () {
+                $("#myEditModal1").modal('show');
+ }
+
+ var saveRecord = function () {
+         var myformdata = $("#form").serialize();
+         $.ajax({
+             type: "POST",
+             url: "/RegisteLogin/EditRecord",
+             data: myformdata ,
+             success: function () {
+                 alert("Record saved.");
+                 $("#myEditModal1").modal("hide");
+                 location.reload();
+             }
+         })
+     }
+</script>
+
